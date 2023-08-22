@@ -1,0 +1,17 @@
+.border-array {
+  border: 1px solid limegreen;
+  border-radius: 0.5rem;
+  padding: 0.3rem 1rem;
+  margin: 0.2rem 0rem;
+}
+
+.border-struct {
+  border: 1px solid red;
+  border-radius: 0.5rem;
+  padding: 0.3rem 1rem;
+  margin: 0.2rem 0rem;
+}
+
+.simple-input {
+  margin: 0.5rem 0rem;
+}
