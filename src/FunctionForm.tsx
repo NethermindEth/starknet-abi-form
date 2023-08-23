@@ -44,7 +44,7 @@ const expandStructsAndReduce = (
             [cMember.name]: {
               type: 'core',
               abi_type: cMember.type,
-              validationSchema: Yup.string(),
+              validationSchema: Yup.string().required(),
               content: '',
             },
           };
@@ -60,7 +60,7 @@ const expandStructsAndReduce = (
                 [cMember.name]: {
                   type: 'array',
                   abi_type: cMember.type,
-                  validationSchema: Yup.array().of(Yup.string()),
+                  validationSchema: Yup.array().of(Yup.string().required()),
                   content: [],
                 },
               };
@@ -148,7 +148,10 @@ function reduceFunctionInputs(
         [c.name]: {
           type: 'core',
           abi_type: c.type,
-          validationSchema: Yup.string().required(),
+          validationSchema: Yup.string()
+            .required()
+            // @ts-expect-error because validate_ip is not a function of Yup
+            .validate_core_type(c.type),
           content: '',
         },
       };
@@ -164,7 +167,12 @@ function reduceFunctionInputs(
             [c.name]: {
               type: 'array',
               abi_type: c.type,
-              validationSchema: Yup.array().of(Yup.string().required()),
+              validationSchema: Yup.array().of(
+                Yup.string()
+                  .required()
+                  // @ts-expect-error because validate_ip is not a function of Yup
+                  .validate_core_type(subArrType)
+              ),
               content: [],
             },
           };
@@ -289,7 +297,7 @@ function extractValidationSchema(values: UIType | {}): {} {
       if (currentObj?.type === 'struct') {
         return {
           ...p,
-          [c]: extractValidationSchema(currentObj?.content),
+          [c]: Yup.object(extractValidationSchema(currentObj?.content)),
         };
       }
 
@@ -298,11 +306,9 @@ function extractValidationSchema(values: UIType | {}): {} {
         // we have assigned in our default parsing for presenting arrays.
         return {
           ...p,
-          [c]: [
-            {
-              ...extractValidationSchema(currentObj?.content[0]),
-            },
-          ],
+          [c]: Yup.array().of(
+            Yup.object(extractValidationSchema(currentObj?.content[0]))
+          ),
         };
       }
 
@@ -322,15 +328,16 @@ type IFunctionForm = {
 
 type IParseInputFieldsFromObject = {
   values: Record<string, string | {} | Array<{}>>;
-  // errors: Record<string, string | {} | Array<{}>>;
-  parentKey?: string[];
+  errors: Record<string, string | {} | Array<{}>>;
+  parentKeys?: string[];
   handleChange: (e: React.ChangeEvent<any>) => any;
   handleArrayPush: (path: string[], value: string | {}) => void;
   handleArrayPop: (path: string[], index: number) => void;
 };
 const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
   values,
-  parentKey,
+  errors,
+  parentKeys,
   handleChange,
   handleArrayPush,
   handleArrayPop,
@@ -343,8 +350,8 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
 
       if (typeof currentValueObject === 'string') {
         let name =
-          parentKey && parentKey?.length > 0
-            ? parentKey?.reduce((p, c) => {
+          parentKeys && parentKeys?.length > 0
+            ? parentKeys?.reduce((p, c) => {
                 if (isNaN(parseInt(c))) {
                   return `${p}.${c}`;
                 } else {
@@ -355,8 +362,14 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
         if (name.length > 0 && name.startsWith('.')) {
           name = name.slice(1);
         }
+
+        const fullPath = parentKeys ? [...parentKeys, key] : [key];
+        let error = '';
+        if (loadashFp.has(errors, fullPath)) {
+          error = loadashFp.get(errors, fullPath);
+        }
         return (
-          <div className="simple-input">
+          <div className="input-wrapper">
             <label>{`${name ? `${name}.` : ''}${key}`}</label>
             <input
               type="text"
@@ -365,6 +378,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
               style={{ width: '100%' }}
               onChange={handleChange}
             />
+            <p className="input-error">{error}</p>
           </div>
         );
       }
@@ -372,12 +386,13 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
         typeof currentValueObject === 'object' &&
         !Array.isArray(currentValueObject)
       ) {
-        const parentKeys = parentKey ? [...parentKey, key] : [key];
+        const lParentKeys = parentKeys ? [...parentKeys, key] : [key];
         return (
           <div className="border-struct">
             <ParseInputFieldsFromObject
               values={{ ...currentValueObject }}
-              parentKey={parentKeys}
+              errors={errors}
+              parentKeys={lParentKeys}
               handleChange={handleChange}
               handleArrayPush={handleArrayPush}
               handleArrayPop={handleArrayPop}
@@ -387,15 +402,16 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
       }
       if (Array.isArray(currentValueObject)) {
         return currentValueObject?.map((obj, index) => {
-          const pathKeys = parentKey ? [...parentKey, key] : [key];
-          const parentKeys = parentKey
-            ? [...parentKey, key, index.toString()]
+          const pathKeys = parentKeys ? [...parentKeys, key] : [key];
+          const lParentKeys = parentKeys
+            ? [...parentKeys, key, index.toString()]
             : [key];
           return (
             <div className="border-array">
               <ParseInputFieldsFromObject
                 values={{ ...obj }}
-                parentKey={parentKeys}
+                errors={errors}
+                parentKeys={lParentKeys}
                 handleChange={handleChange}
                 handleArrayPush={handleArrayPush}
                 handleArrayPop={handleArrayPop}
@@ -403,15 +419,13 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
               <button onClick={() => handleArrayPush(pathKeys, obj)}>
                 ADD +
               </button>
-              {index !== 0 && (
-                <button
-                  onClick={() => {
-                    handleArrayPop(pathKeys, index);
-                  }}
-                >
-                  DELETE -
-                </button>
-              )}
+              <button
+                onClick={() => {
+                  handleArrayPop(pathKeys, index);
+                }}
+              >
+                DELETE -
+              </button>
             </div>
           );
         });
@@ -446,11 +460,11 @@ const FunctionForm: React.FC<IFunctionForm> = ({
     },
     validationSchema: Yup.object(validationSchema),
     onSubmit: (values) => {
-      console.log(values, validationSchema);
+      console.log(values);
     },
   });
 
-  console.log(values, errors, dirty);
+  // console.log(values, errors, dirty);
 
   const handleArrayPush = (path: string[], value: string | {}) => {
     if (loadashFp.has(values, path)) {
@@ -479,7 +493,7 @@ const FunctionForm: React.FC<IFunctionForm> = ({
       <form onSubmit={handleSubmit}>
         <ParseInputFieldsFromObject
           values={values}
-          // errors={errors}
+          errors={errors}
           handleChange={handleChange}
           handleArrayPush={handleArrayPush}
           handleArrayPop={handleArrayPop}

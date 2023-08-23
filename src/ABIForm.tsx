@@ -31,14 +31,6 @@ export const ABIForm: React.FC<ABIFormProps> = ({ abi }) => {
     try {
       const rawFns = extractFunctionFromRawAbi(abi, []);
       const filteredFunction = segregateViewAndExternalFunctions(rawFns);
-
-      // rawFns.map((fn) => {
-      //   fn?.inputs.map((ip) => {
-      //     const subType = extractSubTypesFromType(ip?.type);
-      //     if (subType.contains) console.log({ fn, subType });
-      //   });
-      // });
-      // console.log(extractStructFromABI(abi), extractEnumsFromABI(abi));
       return filteredFunction;
     } catch (e) {
       console.log(e);

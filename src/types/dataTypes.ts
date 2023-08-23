@@ -50,7 +50,9 @@ Yup.addMethod(Yup.string, 'validate_core_type', function (type: string) {
         const isValid = validateCoreType(type, val);
         if (!isValid) {
           return createError(
-            new Yup.ValidationError(`${val} is not correct for type ${type}`)
+            new Yup.ValidationError(
+              `${val} is not correct value for type ${type}`
+            )
           );
         }
         return true;

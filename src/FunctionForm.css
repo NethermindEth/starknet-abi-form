@@ -12,6 +12,10 @@
   margin: 0.2rem 0rem;
 }
 
-.simple-input {
+.input-wrapper {
   margin: 0.5rem 0rem;
+}
+
+.input-error {
+  color: red;
 }
