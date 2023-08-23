@@ -1076,6 +1076,855 @@ const sampleAbi2 = [
   },
 ];
 
+// Goerli Contract Address: 0x0370f2bcbee32a4af36fb3acc7e5b385cda66529063719262e64c21841a907ff
+const sampleAbi3 = [
+  {
+    type: 'function',
+    name: 'constructor',
+    inputs: [
+      {
+        name: 'controller_admin',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'liquidation_threshold',
+        type: 'core::felt252',
+      },
+      {
+        name: 'math_u256_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'user_positions_limit',
+        type: 'core::integer::u32',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'account_collateral',
+    inputs: [
+      {
+        name: 'minter_account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [
+      {
+        type: 'core::integer::u256',
+      },
+    ],
+    state_mutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'controller_admin',
+    inputs: [],
+    outputs: [
+      {
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    state_mutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'factory_address',
+    inputs: [],
+    outputs: [
+      {
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    state_mutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'orderbook_address',
+    inputs: [],
+    outputs: [
+      {
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    state_mutability: 'view',
+  },
+  {
+    type: 'struct',
+    name: 'contracts::controller::OpenOrder',
+    members: [
+      {
+        name: 'option_token_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'orderbook_order_id',
+        type: 'core::felt252',
+      },
+      {
+        name: 'prev_index',
+        type: 'core::felt252',
+      },
+      {
+        name: 'next_index',
+        type: 'core::felt252',
+      },
+    ],
+  },
+  {
+    type: 'function',
+    name: 'sell_open_order',
+    inputs: [
+      {
+        name: 'account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'id',
+        type: 'core::felt252',
+      },
+    ],
+    outputs: [
+      {
+        type: 'contracts::controller::OpenOrder',
+      },
+    ],
+    state_mutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'account_sell_open_orders_index',
+    inputs: [
+      {
+        name: 'account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [
+      {
+        type: 'core::felt252',
+      },
+    ],
+    state_mutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'account_sell_open_orders_count',
+    inputs: [
+      {
+        name: 'account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [
+      {
+        type: 'core::integer::u32',
+      },
+    ],
+    state_mutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'account_total_maintenance_margin',
+    inputs: [
+      {
+        name: 'account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [
+      {
+        type: 'core::integer::u256',
+      },
+    ],
+    state_mutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'account_total_initial_margin',
+    inputs: [
+      {
+        name: 'account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [
+      {
+        type: 'core::integer::u256',
+      },
+    ],
+    state_mutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'get_sell_open_orders_head',
+    inputs: [
+      {
+        name: 'account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [
+      {
+        type: 'core::felt252',
+      },
+    ],
+    state_mutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'get_sell_open_orders_tail',
+    inputs: [
+      {
+        name: 'account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [
+      {
+        type: 'core::felt252',
+      },
+    ],
+    state_mutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'is_market_maker',
+    inputs: [
+      {
+        name: 'market_maker',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [
+      {
+        type: 'core::bool',
+      },
+    ],
+    state_mutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'deposit_collateral',
+    inputs: [
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'collateral_amount',
+        type: 'core::integer::u256',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'open_short',
+    inputs: [
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'strike_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'expiration_date',
+        type: 'core::integer::u64',
+      },
+      {
+        name: 'strike_price',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'is_put',
+        type: 'core::bool',
+      },
+      {
+        name: 'amount',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'price',
+        type: 'core::integer::u256',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'open_short_mm',
+    inputs: [
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'strike_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'expiration_date',
+        type: 'core::integer::u64',
+      },
+      {
+        name: 'strike_price',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'is_put',
+        type: 'core::bool',
+      },
+      {
+        name: 'amount',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'price',
+        type: 'core::integer::u256',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'mint_option_mm',
+    inputs: [
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'strike_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'expiration_date',
+        type: 'core::integer::u64',
+      },
+      {
+        name: 'strike_price',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'is_put',
+        type: 'core::bool',
+      },
+      {
+        name: 'amount',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'price',
+        type: 'core::integer::u256',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'sell_options',
+    inputs: [
+      {
+        name: 'option_token_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'amount',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'price',
+        type: 'core::integer::u256',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'open_long',
+    inputs: [
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'strike_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'expiration_date',
+        type: 'core::integer::u64',
+      },
+      {
+        name: 'strike_price',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'is_put',
+        type: 'core::bool',
+      },
+      {
+        name: 'amount',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'price',
+        type: 'core::integer::u256',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'withdraw_collateral',
+    inputs: [
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'amount',
+        type: 'core::integer::u256',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'execute_short',
+    inputs: [
+      {
+        name: 'account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'option_token_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'orderbook_order_id',
+        type: 'core::felt252',
+      },
+      {
+        name: 'amount',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'fully_filled',
+        type: 'core::bool',
+      },
+      {
+        name: 'buyer',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'execute_short_limit',
+    inputs: [
+      {
+        name: 'account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'option_token_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'amount',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'buyer',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'cancel_open_orders',
+    inputs: [
+      {
+        name: 'account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'liquidate',
+    inputs: [
+      {
+        name: 'account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'liquidate_market_makers',
+    inputs: [
+      {
+        name: 'account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'settle_payoff',
+    inputs: [
+      {
+        name: 'account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'underlying_asset_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'payoff',
+        type: 'core::integer::u256',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'exercise_option',
+    inputs: [
+      {
+        name: 'option_token_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'cancel_buy_order',
+    inputs: [
+      {
+        name: 'option_token_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'orderbook_order_id',
+        type: 'core::felt252',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'cancel_sell_order',
+    inputs: [
+      {
+        name: 'option_token_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'orderbook_order_id',
+        type: 'core::felt252',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'set_factory_address',
+    inputs: [
+      {
+        name: 'factory_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'set_orderbook_address',
+    inputs: [
+      {
+        name: 'orderbook_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'set_market_maker',
+    inputs: [
+      {
+        name: 'market_maker',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'event',
+    name: 'collateral_deposit',
+    inputs: [
+      {
+        name: 'account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'amount',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'underlying_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+  },
+  {
+    type: 'event',
+    name: 'collateral_withdraw',
+    inputs: [
+      {
+        name: 'minter_account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'amount',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'underlying_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+    ],
+  },
+  {
+    type: 'event',
+    name: 'liquidation',
+    inputs: [
+      {
+        name: 'account',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'underlying_address',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'liquidator',
+        type: 'core::starknet::contract_address::ContractAddress',
+      },
+      {
+        name: 'reward',
+        type: 'core::integer::u256',
+      },
+    ],
+  },
+];
+
+// Goerli Contract Address: 0x064fc0fd76134df5d1b89d4cb1be780041180f0ab7e722f068107049dd3aadf6
+const sampleAbi4 = [
+  {
+    type: 'impl',
+    name: 'Balance',
+    interface_name: 'scarb_test_2::IBalance',
+  },
+  {
+    type: 'interface',
+    name: 'scarb_test_2::IBalance',
+    items: [
+      {
+        type: 'function',
+        name: 'get',
+        inputs: [],
+        outputs: [
+          {
+            type: 'core::integer::u128',
+          },
+        ],
+        state_mutability: 'view',
+      },
+      {
+        type: 'function',
+        name: 'increase',
+        inputs: [
+          {
+            name: 'a',
+            type: 'core::integer::u128',
+          },
+        ],
+        outputs: [],
+        state_mutability: 'external',
+      },
+      {
+        type: 'function',
+        name: 'decrease',
+        inputs: [
+          {
+            name: 'decrease_by',
+            type: 'core::integer::u128',
+          },
+        ],
+        outputs: [],
+        state_mutability: 'external',
+      },
+    ],
+  },
+  {
+    type: 'struct',
+    name: 'core::integer::u256',
+    members: [
+      {
+        name: 'low',
+        type: 'core::integer::u128',
+      },
+      {
+        name: 'high',
+        type: 'core::integer::u128',
+      },
+    ],
+  },
+  {
+    type: 'enum',
+    name: 'core::bool',
+    variants: [
+      {
+        name: 'False',
+        type: '()',
+      },
+      {
+        name: 'True',
+        type: '()',
+      },
+    ],
+  },
+  {
+    type: 'struct',
+    name: 'scarb_test_2::Balance::Complex',
+    members: [
+      {
+        name: 'name',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'age',
+        type: 'core::integer::u16',
+      },
+      {
+        name: 'status',
+        type: 'core::bool',
+      },
+      {
+        name: 'votes',
+        type: 'core::array::Array::<core::integer::u256>',
+      },
+    ],
+  },
+  {
+    type: 'function',
+    name: 'complex_input',
+    inputs: [
+      {
+        name: 'complex',
+        type: 'core::array::Array::<scarb_test_2::Balance::Complex>',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'constructor',
+    name: 'constructor',
+    inputs: [
+      {
+        name: 'value_',
+        type: 'core::integer::u128',
+      },
+    ],
+  },
+  {
+    type: 'event',
+    name: 'scarb_test_2::Balance::Event',
+    kind: 'enum',
+    variants: [],
+  },
+];
+
 Primary.args = {
-  abi: sampleAbi2,
+  abi: sampleAbi4,
 };

@@ -25,6 +25,8 @@ export const isACoreType = (type: string): boolean => {
 function validateCoreType(type: string, val: string): boolean {
   const value = BigNumber(val);
   switch (type) {
+    case 'core::bool':
+      return value.lte(1);
     case 'core::integer::u8':
       return value.lte(2 ** 8);
     case 'core::integer::u16':

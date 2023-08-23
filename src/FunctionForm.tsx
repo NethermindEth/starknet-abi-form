@@ -178,7 +178,7 @@ function reduceFunctionInputs(
           };
         } else {
           const structArrIdx = structs?.findIndex(
-            (struct) => struct.name === c.type
+            (struct) => struct.name === subArrType
           );
 
           if (structArrIdx > -1) {
@@ -419,13 +419,15 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
               <button onClick={() => handleArrayPush(pathKeys, obj)}>
                 ADD +
               </button>
-              <button
-                onClick={() => {
-                  handleArrayPop(pathKeys, index);
-                }}
-              >
-                DELETE -
-              </button>
+              {index !== 0 && (
+                <button
+                  onClick={() => {
+                    handleArrayPop(pathKeys, index);
+                  }}
+                >
+                  DELETE -
+                </button>
+              )}
             </div>
           );
         });
@@ -449,10 +451,10 @@ const FunctionForm: React.FC<IFunctionForm> = ({
 
   const initialValuesMap = reduceFunctionInputs(functionAbi?.inputs, structs);
 
-  //   console.log(initialValuesMap, functionAbi, structs);
+    console.log(initialValuesMap, functionAbi, structs);
   const initialValues = extractInitialValues(initialValuesMap);
   const validationSchema = extractValidationSchema(initialValuesMap);
-  console.log({ initialValues, validationSchema });
+  // console.log({ initialValues, validationSchema });
 
   const { values, errors, dirty, handleChange, handleSubmit } = useFormik({
     initialValues: {
