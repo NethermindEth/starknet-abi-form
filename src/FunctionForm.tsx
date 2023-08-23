@@ -129,7 +129,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
             }
 
             return (
-              <div className="border-array-item">
+              <div className="border-array-item" key={fullPath.join('|')}>
                 <div className="input-wrapper">
                   <label htmlFor={`${name}`}>{`${name}`}</label>
                   <input
@@ -218,7 +218,6 @@ const FunctionForm: React.FC<IFunctionForm> = ({
   }
 
   const initialValuesMap = reduceFunctionInputs(functionAbi?.inputs, structs);
-
   // console.log(initialValuesMap, functionAbi, structs);
   const initialValues = extractInitialValues(initialValuesMap);
   const validationSchema = extractValidationSchema(initialValuesMap);

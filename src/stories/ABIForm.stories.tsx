@@ -13,6 +13,7 @@ const Template: StoryFn<typeof ABIForm> = (args) => <ABIForm {...args} />;
 
 export const Primary = Template.bind({});
 
+// Sample ABI 1
 // const sampleAbi = [
 //   {
 //     type: 'struct',
@@ -909,173 +910,175 @@ export const Primary = Template.bind({});
 //   },
 // ];
 
-const sampleAbi2 = [
-  {
-    type: 'impl',
-    name: 'Balance',
-    interface_name: 'scarb_test::IBalance',
-  },
-  {
-    type: 'interface',
-    name: 'scarb_test::IBalance',
-    items: [
-      {
-        type: 'function',
-        name: 'get',
-        inputs: [],
-        outputs: [
-          {
-            type: 'core::integer::u128',
-          },
-        ],
-        state_mutability: 'view',
-      },
-      {
-        type: 'function',
-        name: 'increase',
-        inputs: [
-          {
-            name: 'a',
-            type: 'core::integer::u128',
-          },
-        ],
-        outputs: [],
-        state_mutability: 'external',
-      },
-      {
-        type: 'function',
-        name: 'decrease',
-        inputs: [
-          {
-            name: 'decrease_by',
-            type: 'core::integer::u128',
-          },
-        ],
-        outputs: [],
-        state_mutability: 'external',
-      },
-    ],
-  },
-  {
-    type: 'struct',
-    name: 'core::integer::u256',
-    members: [
-      {
-        name: 'low',
-        type: 'core::integer::u128',
-      },
-      {
-        name: 'high',
-        type: 'core::integer::u128',
-      },
-    ],
-  },
-  {
-    type: 'enum',
-    name: 'core::bool',
-    variants: [
-      {
-        name: 'False',
-        type: '()',
-      },
-      {
-        name: 'True',
-        type: '()',
-      },
-    ],
-  },
-  {
-    type: 'struct',
-    name: 'scarb_test::Balance::VoteDetails',
-    members: [
-      {
-        name: 'name',
-        type: 'core::integer::u256',
-      },
-      {
-        name: 'party',
-        type: 'core::integer::u256',
-      },
-      {
-        name: 'conclusion',
-        type: 'core::integer::u8',
-      },
-    ],
-  },
-  {
-    type: 'struct',
-    name: 'scarb_test::Balance::Status',
-    members: [
-      {
-        name: 'voted',
-        type: 'core::bool',
-      },
-      {
-        name: 'timestamp',
-        type: 'core::integer::u64',
-      },
-      {
-        name: 'details',
-        type: 'core::array::Array::<scarb_test::Balance::VoteDetails>',
-      },
-    ],
-  },
-  {
-    type: 'struct',
-    name: 'scarb_test::Balance::Complex',
-    members: [
-      {
-        name: 'name',
-        type: 'core::integer::u256',
-      },
-      {
-        name: 'age',
-        type: 'core::integer::u16',
-      },
-      {
-        name: 'status',
-        type: 'core::bool',
-      },
-      {
-        name: 'votes',
-        type: 'core::array::Array::<core::integer::u256>',
-      },
-      {
-        name: 'statue',
-        type: 'scarb_test::Balance::Status',
-      },
-    ],
-  },
-  {
-    type: 'function',
-    name: 'complex_input',
-    inputs: [
-      {
-        name: 'complex',
-        type: 'scarb_test::Balance::Complex',
-      },
-    ],
-    outputs: [],
-    state_mutability: 'external',
-  },
-  {
-    type: 'constructor',
-    name: 'constructor',
-    inputs: [
-      {
-        name: 'value_',
-        type: 'core::integer::u128',
-      },
-    ],
-  },
-  {
-    type: 'event',
-    name: 'scarb_test::Balance::Event',
-    kind: 'enum',
-    variants: [],
-  },
-];
+// Sample ABI 2
+// const sampleAbi = [
+//   {
+//     type: 'impl',
+//     name: 'Balance',
+//     interface_name: 'scarb_test::IBalance',
+//   },
+//   {
+//     type: 'interface',
+//     name: 'scarb_test::IBalance',
+//     items: [
+//       {
+//         type: 'function',
+//         name: 'get',
+//         inputs: [],
+//         outputs: [
+//           {
+//             type: 'core::integer::u128',
+//           },
+//         ],
+//         state_mutability: 'view',
+//       },
+//       {
+//         type: 'function',
+//         name: 'increase',
+//         inputs: [
+//           {
+//             name: 'a',
+//             type: 'core::integer::u128',
+//           },
+//         ],
+//         outputs: [],
+//         state_mutability: 'external',
+//       },
+//       {
+//         type: 'function',
+//         name: 'decrease',
+//         inputs: [
+//           {
+//             name: 'decrease_by',
+//             type: 'core::integer::u128',
+//           },
+//         ],
+//         outputs: [],
+//         state_mutability: 'external',
+//       },
+//     ],
+//   },
+//   {
+//     type: 'struct',
+//     name: 'core::integer::u256',
+//     members: [
+//       {
+//         name: 'low',
+//         type: 'core::integer::u128',
+//       },
+//       {
+//         name: 'high',
+//         type: 'core::integer::u128',
+//       },
+//     ],
+//   },
+//   {
+//     type: 'enum',
+//     name: 'core::bool',
+//     variants: [
+//       {
+//         name: 'False',
+//         type: '()',
+//       },
+//       {
+//         name: 'True',
+//         type: '()',
+//       },
+//     ],
+//   },
+//   {
+//     type: 'struct',
+//     name: 'scarb_test::Balance::VoteDetails',
+//     members: [
+//       {
+//         name: 'name',
+//         type: 'core::integer::u256',
+//       },
+//       {
+//         name: 'party',
+//         type: 'core::integer::u256',
+//       },
+//       {
+//         name: 'conclusion',
+//         type: 'core::integer::u8',
+//       },
+//     ],
+//   },
+//   {
+//     type: 'struct',
+//     name: 'scarb_test::Balance::Status',
+//     members: [
+//       {
+//         name: 'voted',
+//         type: 'core::bool',
+//       },
+//       {
+//         name: 'timestamp',
+//         type: 'core::integer::u64',
+//       },
+//       {
+//         name: 'details',
+//         type: 'core::array::Array::<scarb_test::Balance::VoteDetails>',
+//       },
+//     ],
+//   },
+//   {
+//     type: 'struct',
+//     name: 'scarb_test::Balance::Complex',
+//     members: [
+//       {
+//         name: 'name',
+//         type: 'core::integer::u256',
+//       },
+//       {
+//         name: 'age',
+//         type: 'core::integer::u16',
+//       },
+//       {
+//         name: 'status',
+//         type: 'core::bool',
+//       },
+//       {
+//         name: 'votes',
+//         type: 'core::array::Array::<core::integer::u256>',
+//       },
+//       {
+//         name: 'statue',
+//         type: 'scarb_test::Balance::Status',
+//       },
+//     ],
+//   },
+//   {
+//     type: 'function',
+//     name: 'complex_input',
+//     inputs: [
+//       {
+//         name: 'complex',
+//         type: 'scarb_test::Balance::Complex',
+//       },
+//     ],
+//     outputs: [],
+//     state_mutability: 'external',
+//   },
+//   {
+//     type: 'constructor',
+//     name: 'constructor',
+//     inputs: [
+//       {
+//         name: 'value_',
+//         type: 'core::integer::u128',
+//       },
+//     ],
+//   },
+//   {
+//     type: 'event',
+//     name: 'scarb_test::Balance::Event',
+//     kind: 'enum',
+//     variants: [],
+//   },
+// ];
 
+// Sample ABI 3
 // Goerli Contract Address: 0x0370f2bcbee32a4af36fb3acc7e5b385cda66529063719262e64c21841a907ff
 // const sampleAbi3 = [
 //   {
@@ -1797,6 +1800,7 @@ const sampleAbi2 = [
 //   },
 // ];
 
+// Sample ABI 4
 // Goerli Contract Address: 0x064fc0fd76134df5d1b89d4cb1be780041180f0ab7e722f068107049dd3aadf6
 // const sampleAbi4 = [
 //   {
@@ -1925,146 +1929,147 @@ const sampleAbi2 = [
 //   },
 // ];
 
+// Sample ABI 5
 // Goerli Contract Address: 0x07de87b39455a44e4c55e1930d5518e526b14e8f7ed320381ba8cce02a11b533
-// const sampleAbi5 = [
-//   {
-//     type: 'impl',
-//     name: 'Balance',
-//     interface_name: 'scarb_test_2::IBalance',
-//   },
-//   {
-//     type: 'interface',
-//     name: 'scarb_test_2::IBalance',
-//     items: [
-//       {
-//         type: 'function',
-//         name: 'get',
-//         inputs: [],
-//         outputs: [
-//           {
-//             type: 'core::integer::u128',
-//           },
-//         ],
-//         state_mutability: 'view',
-//       },
-//       {
-//         type: 'function',
-//         name: 'increase',
-//         inputs: [
-//           {
-//             name: 'a',
-//             type: 'core::integer::u128',
-//           },
-//         ],
-//         outputs: [],
-//         state_mutability: 'external',
-//       },
-//       {
-//         type: 'function',
-//         name: 'decrease',
-//         inputs: [
-//           {
-//             name: 'decrease_by',
-//             type: 'core::integer::u128',
-//           },
-//         ],
-//         outputs: [],
-//         state_mutability: 'external',
-//       },
-//     ],
-//   },
-//   {
-//     type: 'struct',
-//     name: 'core::integer::u256',
-//     members: [
-//       {
-//         name: 'low',
-//         type: 'core::integer::u128',
-//       },
-//       {
-//         name: 'high',
-//         type: 'core::integer::u128',
-//       },
-//     ],
-//   },
-//   {
-//     type: 'enum',
-//     name: 'core::bool',
-//     variants: [
-//       {
-//         name: 'False',
-//         type: '()',
-//       },
-//       {
-//         name: 'True',
-//         type: '()',
-//       },
-//     ],
-//   },
-//   {
-//     type: 'struct',
-//     name: 'scarb_test_2::Balance::Complex',
-//     members: [
-//       {
-//         name: 'name',
-//         type: 'core::integer::u256',
-//       },
-//       {
-//         name: 'age',
-//         type: 'core::integer::u16',
-//       },
-//       {
-//         name: 'status',
-//         type: 'core::bool',
-//       },
-//       {
-//         name: 'votes',
-//         type: 'core::array::Array::<core::integer::u256>',
-//       },
-//     ],
-//   },
-//   {
-//     type: 'function',
-//     name: 'complex_input',
-//     inputs: [
-//       {
-//         name: 'complex',
-//         type: 'core::array::Array::<scarb_test_2::Balance::Complex>',
-//       },
-//     ],
-//     outputs: [],
-//     state_mutability: 'external',
-//   },
-//   {
-//     type: 'function',
-//     name: 'user_input',
-//     inputs: [
-//       {
-//         name: 'state',
-//         type: 'core::array::Array::<core::integer::u128>',
-//       },
-//     ],
-//     outputs: [],
-//     state_mutability: 'external',
-//   },
-//   {
-//     type: 'constructor',
-//     name: 'constructor',
-//     inputs: [
-//       {
-//         name: 'value_',
-//         type: 'core::integer::u128',
-//       },
-//     ],
-//   },
-//   {
-//     type: 'event',
-//     name: 'scarb_test_2::Balance::Event',
-//     kind: 'enum',
-//     variants: [],
-//   },
-// ];
+const sampleAbi = [
+  {
+    type: 'impl',
+    name: 'Balance',
+    interface_name: 'scarb_test_2::IBalance',
+  },
+  {
+    type: 'interface',
+    name: 'scarb_test_2::IBalance',
+    items: [
+      {
+        type: 'function',
+        name: 'get',
+        inputs: [],
+        outputs: [
+          {
+            type: 'core::integer::u128',
+          },
+        ],
+        state_mutability: 'view',
+      },
+      {
+        type: 'function',
+        name: 'increase',
+        inputs: [
+          {
+            name: 'a',
+            type: 'core::integer::u128',
+          },
+        ],
+        outputs: [],
+        state_mutability: 'external',
+      },
+      {
+        type: 'function',
+        name: 'decrease',
+        inputs: [
+          {
+            name: 'decrease_by',
+            type: 'core::integer::u128',
+          },
+        ],
+        outputs: [],
+        state_mutability: 'external',
+      },
+    ],
+  },
+  {
+    type: 'struct',
+    name: 'core::integer::u256',
+    members: [
+      {
+        name: 'low',
+        type: 'core::integer::u128',
+      },
+      {
+        name: 'high',
+        type: 'core::integer::u128',
+      },
+    ],
+  },
+  {
+    type: 'enum',
+    name: 'core::bool',
+    variants: [
+      {
+        name: 'False',
+        type: '()',
+      },
+      {
+        name: 'True',
+        type: '()',
+      },
+    ],
+  },
+  {
+    type: 'struct',
+    name: 'scarb_test_2::Balance::Complex',
+    members: [
+      {
+        name: 'name',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'age',
+        type: 'core::integer::u16',
+      },
+      {
+        name: 'status',
+        type: 'core::bool',
+      },
+      {
+        name: 'votes',
+        type: 'core::array::Array::<core::integer::u256>',
+      },
+    ],
+  },
+  {
+    type: 'function',
+    name: 'complex_input',
+    inputs: [
+      {
+        name: 'complex',
+        type: 'core::array::Array::<scarb_test_2::Balance::Complex>',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'function',
+    name: 'user_input',
+    inputs: [
+      {
+        name: 'state',
+        type: 'core::array::Array::<core::integer::u128>',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'constructor',
+    name: 'constructor',
+    inputs: [
+      {
+        name: 'value_',
+        type: 'core::integer::u128',
+      },
+    ],
+  },
+  {
+    type: 'event',
+    name: 'scarb_test_2::Balance::Event',
+    kind: 'enum',
+    variants: [],
+  },
+];
 
 Primary.args = {
-  abi: sampleAbi2,
+  abi: sampleAbi,
 };

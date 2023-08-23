@@ -28,7 +28,10 @@ const expandStructsAndReduce = (
             [cMember.name]: {
               type: 'core',
               abi_type: cMember.type,
-              validationSchema: Yup.string().required(),
+              validationSchema: Yup.string()
+                .required()
+                // @ts-expect-error because validate_core_type is not a function of Yup
+                .validate_core_type(cMember.type),
               content: '',
             },
           };
@@ -44,7 +47,12 @@ const expandStructsAndReduce = (
                 [cMember.name]: {
                   type: 'array',
                   abi_type: cMember.type,
-                  validationSchema: Yup.array().of(Yup.string().required()),
+                  validationSchema: Yup.array(
+                    Yup.string()
+                      .required()
+                      // @ts-expect-error because validate_core_type is not a function of Yup
+                      .validate_core_type(subArrType)
+                  ),
                   content: [],
                 },
               };
@@ -131,7 +139,7 @@ export const reduceFunctionInputs = (
           abi_type: c.type,
           validationSchema: Yup.string()
             .required()
-            // @ts-expect-error because validate_ip is not a function of Yup
+            // @ts-expect-error because validate_core_type is not a function of Yup
             .validate_core_type(c.type),
           content: '',
         },
@@ -151,7 +159,7 @@ export const reduceFunctionInputs = (
               validationSchema: Yup.array(
                 Yup.string()
                   .required()
-                  // @ts-expect-error because validate_ip is not a function of Yup
+                  // @ts-expect-error because validate_core_type is not a function of Yup
                   .validate_core_type(subArrType)
               ),
               content: [],
