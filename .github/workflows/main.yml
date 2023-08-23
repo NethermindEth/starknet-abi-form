@@ -21,25 +21,25 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
-          cache: 'yarn'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Check types
-        run: yarn type-check
+        run: pnpm type-check
 
       - name: Check linting
-        run: yarn lint
+        run: pnpm lint
 
       - name: Run tests
-        run: yarn test:ci
+        run: pnpm test:ci
 
       - name: Build storybook
-        run: yarn build-storybook
+        run: pnpm build-storybook
 
       - name: Build package
-        run: yarn build
+        run: pnpm build
 
       - name: Check commits messages
         uses: wagoid/commitlint-github-action@v5

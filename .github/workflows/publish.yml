@@ -16,8 +16,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
-      - run: yarn
-      - run: yarn deploy-storybook --ci
+      - run: pnpm
+      - run: pnpm deploy-storybook --ci
         env:
           GH_TOKEN: ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}
 # Uncomment to enable auto publishing to npm
