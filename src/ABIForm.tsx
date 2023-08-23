@@ -2,12 +2,11 @@ import './ABIForm.css';
 
 import React, { useMemo } from 'react';
 
+import { selector } from 'starknet';
 import { ABI, abiSchema } from './types/index';
 import {
-  extractEnumsFromABI,
   extractFunctionFromRawAbi,
   extractStructFromABI,
-  extractSubTypesFromType,
   segregateViewAndExternalFunctions,
 } from './types/helper';
 import FunctionForm from './FunctionForm';
@@ -23,7 +22,6 @@ export const ABIForm: React.FC<ABIFormProps> = ({ abi }) => {
     return <p>Not a Valid ABI Schema</p>;
   }
 
-
   // If abi validated successfully then it's a valid abi as per spec.
   // https://github.com/starkware-libs/starknet-specs/blob/master/api/starknet_metadata.json
 
@@ -33,7 +31,6 @@ export const ABIForm: React.FC<ABIFormProps> = ({ abi }) => {
       const filteredFunction = segregateViewAndExternalFunctions(rawFns);
       return filteredFunction;
     } catch (e) {
-      console.log(e);
       return {
         viewFunctions: [],
         externalFunctions: [],
@@ -49,38 +46,34 @@ export const ABIForm: React.FC<ABIFormProps> = ({ abi }) => {
     }
   }, [abi]);
 
-  const enums = useMemo(() => {
-    try {
-      return extractEnumsFromABI(abi);
-    } catch (e) {
-      return [];
-    }
-  }, [abi]);
+  // const enums = useMemo(() => {
+  //   try {
+  //     return extractEnumsFromABI(abi);
+  //   } catch (e) {
+  //     return [];
+  //   }
+  // }, [abi]);
 
   return (
-    <>
-      <div>
-        <p>Read</p>
-        {viewFunctions.map((viewFn) => {
-          return (
-            <FunctionForm
-              functionAbi={viewFn}
-              structs={structs}
-              enums={enums}
-            />
-          );
-        })}
-        <p>Write</p>
-        {externalFunctions.map((externalFn) => {
-          return (
-            <FunctionForm
-              functionAbi={externalFn}
-              structs={structs}
-              enums={enums}
-            />
-          );
-        })}
-      </div>
-    </>
+    <div>
+      <p>Read</p>
+      {viewFunctions.map((viewFn) => (
+        <FunctionForm
+          key={`viewFn${selector.getSelectorFromName(viewFn?.name)}`}
+          functionAbi={viewFn}
+          structs={structs}
+          // enums={enums}
+        />
+      ))}
+      <p>Write</p>
+      {externalFunctions.map((externalFn) => (
+        <FunctionForm
+          key={`externalFn${selector.getSelectorFromName(externalFn?.name)}`}
+          functionAbi={externalFn}
+          structs={structs}
+          // enums={enums}
+        />
+      ))}
+    </div>
   );
 };

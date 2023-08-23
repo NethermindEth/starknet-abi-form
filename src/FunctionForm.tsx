@@ -1,338 +1,30 @@
 import React from 'react';
-import {
-  ABIEnum,
-  ABIFunction,
-  ABIFunctionInputs,
-  ABIStruct,
-  yupAbiFunctionSchema,
-} from './types';
-import { CoreTypes, isACoreType } from './types/dataTypes';
-import StructForm from './StructForm';
-import {
-  extractSubTypesFromType,
-  hasArrayOfSubType,
-  hasSubTypes,
-} from './types/helper';
+
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import loadashFp from 'lodash';
+import { ABIFunction, ABIStruct, yupAbiFunctionSchema } from './types';
 
 import './FunctionForm.css';
-
-// name: {type: core | array | struct, validation: yupSchema, content: [] | {} | ''}
-
-type UIType = {
-  type: 'core' | 'array' | 'struct';
-  validationSchema?: null | Yup.AnySchema;
-  abi_type: string;
-  content: string | any[] | {};
-};
-const expandStructsAndReduce = (
-  struct: ABIStruct,
-  structs: ABIStruct[]
-): UIType | {} => {
-  if (struct && typeof struct === 'object') {
-    if (
-      struct.members &&
-      Array.isArray(struct.members) &&
-      struct.members.length > 0
-    ) {
-      return struct.members.reduce((pMember, cMember) => {
-        if (isACoreType(cMember.type)) {
-          return {
-            ...pMember,
-            [cMember.name]: {
-              type: 'core',
-              abi_type: cMember.type,
-              validationSchema: Yup.string().required(),
-              content: '',
-            },
-          };
-        }
-        if (hasArrayOfSubType(cMember.type)) {
-          const isSubTypes = extractSubTypesFromType(cMember.type);
-          if (isSubTypes && isSubTypes?.contains && isSubTypes?.types) {
-            const subArrType = isSubTypes.types[0];
-            // Is Array is of core type return,
-            if (isACoreType(subArrType)) {
-              return {
-                ...pMember,
-                [cMember.name]: {
-                  type: 'array',
-                  abi_type: cMember.type,
-                  validationSchema: Yup.array().of(Yup.string().required()),
-                  content: [],
-                },
-              };
-            } else {
-              // Else call recursively
-              const structArrIdx = structs?.findIndex(
-                (struct) => struct.name === subArrType
-              );
-              if (structArrIdx > -1) {
-                const reducedStruct = expandStructsAndReduce(
-                  structs[structArrIdx],
-                  structs
-                );
-
-                return {
-                  ...pMember,
-                  [cMember.name]: {
-                    type: 'array',
-                    validationSchema: null,
-                    abi_type: cMember.type,
-                    content: [
-                      {
-                        ...reducedStruct,
-                      },
-                    ],
-                  },
-                };
-              } else {
-                return {
-                  ...pMember,
-                  [cMember.name]: {
-                    type: 'raw',
-                    abi_type: cMember.type,
-                    validationSchema: Yup.string(),
-                    content: '',
-                  },
-                };
-              }
-            }
-          }
-        }
-
-        const structIdx = structs?.findIndex(
-          (struct) => struct.name === cMember.type
-        );
-
-        if (structIdx > -1) {
-          const reducedStruct = expandStructsAndReduce(
-            structs[structIdx],
-            structs
-          );
-
-          return {
-            ...pMember,
-            [cMember.name]: {
-              type: 'struct',
-              abi_type: cMember.type,
-              validationSchema: null,
-              content: {
-                ...reducedStruct,
-              },
-            },
-          };
-        }
-
-        return {
-          ...pMember,
-        };
-      }, {});
-    } else {
-      return {};
-    }
-  }
-  return {};
-};
-
-function reduceFunctionInputs(
-  inputs: ABIFunctionInputs[],
-  structs: ABIStruct[]
-): UIType | {} {
-  return inputs?.reduce((p, c) => {
-    if (isACoreType(c.type)) {
-      return {
-        ...p,
-        [c.name]: {
-          type: 'core',
-          abi_type: c.type,
-          validationSchema: Yup.string()
-            .required()
-            // @ts-expect-error because validate_ip is not a function of Yup
-            .validate_core_type(c.type),
-          content: '',
-        },
-      };
-    }
-
-    if (hasArrayOfSubType(c.type)) {
-      const isSubTypes = extractSubTypesFromType(c.type);
-      if (isSubTypes && isSubTypes?.contains && isSubTypes?.types) {
-        const subArrType = isSubTypes.types[0];
-        if (isACoreType(c.type)) {
-          return {
-            ...p,
-            [c.name]: {
-              type: 'array',
-              abi_type: c.type,
-              validationSchema: Yup.array().of(
-                Yup.string()
-                  .required()
-                  // @ts-expect-error because validate_ip is not a function of Yup
-                  .validate_core_type(subArrType)
-              ),
-              content: [],
-            },
-          };
-        } else {
-          const structArrIdx = structs?.findIndex(
-            (struct) => struct.name === subArrType
-          );
-
-          if (structArrIdx > -1) {
-            const reducedStruct = expandStructsAndReduce(
-              structs[structArrIdx],
-              structs
-            );
-            return {
-              ...p,
-              [c.name]: {
-                type: 'array',
-                validationSchema: null,
-                abi_type: c.type,
-                content: [
-                  {
-                    ...reducedStruct,
-                  },
-                ],
-              },
-            };
-          } else {
-            return {
-              ...p,
-              [c.name]: {
-                type: 'raw',
-                abi_type: c.type,
-                validationSchema: Yup.string(),
-                content: '',
-              },
-            };
-          }
-        }
-      }
-    }
-
-    const structIdx = structs?.findIndex((struct) => struct.name === c.type);
-
-    if (structIdx > -1) {
-      const reduced_struct = expandStructsAndReduce(
-        structs[structIdx],
-        structs
-      );
-      return {
-        ...p,
-        [c.name]: {
-          type: 'struct',
-          abi_type: c.type,
-          validationSchema: null,
-          content: {
-            ...reduced_struct,
-          },
-        },
-      };
-    }
-
-    return {
-      ...p,
-    };
-  }, {});
-}
-
-function extractInitialValues(values: UIType | {}): {} {
-  if (typeof values === 'object' && Object.keys(values).length > 0) {
-    return Object.keys(values).reduce((p, c) => {
-      // @ts-ignore
-      const currentObj = values[c];
-      //   console.log(currentObj);
-      if (currentObj?.type === 'core') {
-        return {
-          ...p,
-          [c]: currentObj?.content,
-        };
-      }
-
-      if (currentObj?.type === 'struct') {
-        return {
-          ...p,
-          [c]: extractInitialValues(currentObj?.content),
-        };
-      }
-
-      if (currentObj?.type === 'array') {
-        // We can safely take 0th object from array since
-        // we have assigned in our default parsing for presenting arrays.
-        return {
-          ...p,
-          [c]: [
-            {
-              ...extractInitialValues(currentObj?.content[0]),
-            },
-          ],
-        };
-      }
-
-      return {
-        ...p,
-      };
-    }, {});
-  }
-  return {};
-}
-
-function extractValidationSchema(values: UIType | {}): {} {
-  if (typeof values === 'object' && Object.keys(values).length > 0) {
-    return Object.keys(values).reduce((p, c) => {
-      // @ts-ignore
-      const currentObj = values[c];
-      //   console.log(currentObj);
-      if (currentObj?.type === 'core') {
-        return {
-          ...p,
-          [c]: currentObj?.validationSchema,
-        };
-      }
-
-      if (currentObj?.type === 'struct') {
-        return {
-          ...p,
-          [c]: Yup.object(extractValidationSchema(currentObj?.content)),
-        };
-      }
-
-      if (currentObj?.type === 'array') {
-        // We can safely take 0th object from array since
-        // we have assigned in our default parsing for presenting arrays.
-        return {
-          ...p,
-          [c]: Yup.array().of(
-            Yup.object(extractValidationSchema(currentObj?.content[0]))
-          ),
-        };
-      }
-
-      return {
-        ...p,
-      };
-    }, {});
-  }
-  return {};
-}
+import {
+  extractInitialValues,
+  extractValidationSchema,
+  reduceFunctionInputs,
+} from './types/uiHelpers';
 
 type IFunctionForm = {
   functionAbi: ABIFunction;
   structs: ABIStruct[];
-  enums: ABIEnum[];
+  // enums: ABIEnum[];
 };
 
 type IParseInputFieldsFromObject = {
-  values: Record<string, string | {} | Array<{}>>;
   errors: Record<string, string | {} | Array<{}>>;
-  parentKeys?: string[];
-  handleChange: (e: React.ChangeEvent<any>) => any;
-  handleArrayPush: (path: string[], value: string | {}) => void;
   handleArrayPop: (path: string[], index: number) => void;
+  handleArrayPush: (path: string[], value: string | {}) => void;
+  handleChange: (e: React.ChangeEvent<any>) => any;
+  parentKeys?: string[];
+  values: Record<string, string | {} | Array<{}>>;
 };
 const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
   values,
@@ -352,11 +44,10 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
         let name =
           parentKeys && parentKeys?.length > 0
             ? parentKeys?.reduce((p, c) => {
-                if (isNaN(parseInt(c))) {
+                if (Number.isNaN(parseInt(c, 10))) {
                   return `${p}.${c}`;
-                } else {
-                  return `${p}[${c}]`;
                 }
+                return `${p}[${c}]`;
               }, '')
             : '';
         if (name.length > 0 && name.startsWith('.')) {
@@ -365,14 +56,18 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
 
         const fullPath = parentKeys ? [...parentKeys, key] : [key];
         let error = '';
+
         if (loadashFp.has(errors, fullPath)) {
           error = loadashFp.get(errors, fullPath);
         }
         return (
-          <div className="input-wrapper">
-            <label>{`${name ? `${name}.` : ''}${key}`}</label>
+          <div className="input-wrapper" key={fullPath?.join('|')}>
+            <label htmlFor={`${name ? `${name}.` : ''}${key}`}>
+              {`${name ? `${name}.` : ''}${key}`}
+            </label>
             <input
               type="text"
+              id={`${name ? `${name}.` : ''}${key}`}
               name={`${name ? `${name}.` : ''}${key}`}
               placeholder={`${name ? `${name}.` : ''}${key}`}
               style={{ width: '100%' }}
@@ -388,7 +83,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
       ) {
         const lParentKeys = parentKeys ? [...parentKeys, key] : [key];
         return (
-          <div className="border-struct">
+          <div className="border-struct" key={lParentKeys.join('|')}>
             <ParseInputFieldsFromObject
               values={{ ...currentValueObject }}
               errors={errors}
@@ -403,11 +98,75 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
       if (Array.isArray(currentValueObject)) {
         return currentValueObject?.map((obj, index) => {
           const pathKeys = parentKeys ? [...parentKeys, key] : [key];
+
           const lParentKeys = parentKeys
             ? [...parentKeys, key, index.toString()]
-            : [key];
+            : [key, index.toString()];
+
+          if (typeof obj === 'string') {
+            // In this case it is an array of coreDataType, so don't have to call recursively here.
+            // Stop Condition
+
+            let name =
+              lParentKeys && lParentKeys?.length > 0
+                ? lParentKeys?.reduce((p, c) => {
+                    if (Number.isNaN(parseInt(c, 10))) {
+                      return `${p}.${c}`;
+                    }
+                    return `${p}[${c}]`;
+                  }, '')
+                : '';
+            if (name.length > 0 && name.startsWith('.')) {
+              name = name.slice(1);
+            }
+
+            const fullPath = lParentKeys;
+
+            let error = '';
+
+            if (loadashFp.has(errors, fullPath)) {
+              error = loadashFp.get(errors, fullPath);
+            }
+
+            return (
+              <div className="border-array-item">
+                <div className="input-wrapper">
+                  <label htmlFor={`${name}`}>{`${name}`}</label>
+                  <input
+                    type="text"
+                    name={`${name}`}
+                    id={`${name}`}
+                    placeholder={`${name}`}
+                    style={{ width: '100%' }}
+                    onChange={handleChange}
+                  />
+                  <p className="input-error">{error}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleArrayPush(pathKeys, obj);
+                  }}
+                >
+                  ADD +
+                </button>
+                {index !== 0 && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleArrayPop(pathKeys, index);
+                    }}
+                  >
+                    DELETE -
+                  </button>
+                )}
+              </div>
+            );
+          }
           return (
-            <div className="border-array">
+            <div className="border-array-item" key={lParentKeys.join('|')}>
               <ParseInputFieldsFromObject
                 values={{ ...obj }}
                 errors={errors}
@@ -416,12 +175,20 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
                 handleArrayPush={handleArrayPush}
                 handleArrayPop={handleArrayPop}
               />
-              <button onClick={() => handleArrayPush(pathKeys, obj)}>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleArrayPush(pathKeys, obj);
+                }}
+              >
                 ADD +
               </button>
               {index !== 0 && (
                 <button
-                  onClick={() => {
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
                     handleArrayPop(pathKeys, index);
                   }}
                 >
@@ -432,15 +199,16 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
           );
         });
       }
+      return '';
     });
   }
-  return <></>;
+  return <p>Could not parse type!!</p>;
 };
 
 const FunctionForm: React.FC<IFunctionForm> = ({
   functionAbi,
   structs,
-  enums,
+  // enums,
 }) => {
   // Check if functionAbi is correct with yup validation schema
   try {
@@ -451,18 +219,19 @@ const FunctionForm: React.FC<IFunctionForm> = ({
 
   const initialValuesMap = reduceFunctionInputs(functionAbi?.inputs, structs);
 
-    console.log(initialValuesMap, functionAbi, structs);
+  // console.log(initialValuesMap, functionAbi, structs);
   const initialValues = extractInitialValues(initialValuesMap);
   const validationSchema = extractValidationSchema(initialValuesMap);
   // console.log({ initialValues, validationSchema });
 
-  const { values, errors, dirty, handleChange, handleSubmit } = useFormik({
+  const { values, errors, setValues, handleChange, handleSubmit } = useFormik({
     initialValues: {
       ...initialValues,
     },
     validationSchema: Yup.object(validationSchema),
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: (finalValues) => {
+      // @ts-ignore
+      console.log('final values:', { finalValues });
     },
   });
 
@@ -473,6 +242,7 @@ const FunctionForm: React.FC<IFunctionForm> = ({
       const oldValues = loadashFp.get(values, path);
       const newValues = [...oldValues, value];
       loadashFp.set(values, path, newValues);
+      setValues({ ...values });
     }
   };
 
@@ -483,6 +253,7 @@ const FunctionForm: React.FC<IFunctionForm> = ({
         ...oldValues.filter((o: any, i: number) => i !== index),
       ];
       loadashFp.set(values, path, newValues);
+      setValues({ ...values });
     }
   };
 
@@ -490,7 +261,8 @@ const FunctionForm: React.FC<IFunctionForm> = ({
     <div>
       <h5>
         {functionAbi?.name}(
-        {functionAbi?.inputs?.map((ip) => `${ip?.name}`).join(',')})
+        {functionAbi?.inputs?.map((ip) => `${ip?.name}: ${ip?.type}`).join(',')}
+        )
       </h5>
       <form onSubmit={handleSubmit}>
         <ParseInputFieldsFromObject

@@ -1,4 +1,4 @@
-.border-array {
+.border-array-item {
   border: 1px solid limegreen;
   border-radius: 0.5rem;
   padding: 0.3rem 1rem;
@@ -14,6 +14,20 @@
 
 .input-wrapper {
   margin: 0.5rem 0rem;
+}
+
+.btn {
+  display: block;
+  width: max-content;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid black;
+}
+
+.btn:hover {
+  cursor: pointer;
+  box-shadow: 1px 1px 5px black;
 }
 
 .input-error {
