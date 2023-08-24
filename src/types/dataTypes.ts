@@ -1,4 +1,4 @@
-import { cairo, uint256 } from 'starknet';
+import { uint256 } from 'starknet';
 import { BigNumber } from 'bignumber.js';
 import * as Yup from 'yup';
 
@@ -28,22 +28,24 @@ function validateCoreType(type: string, val: string): boolean {
     case 'core::bool':
       return value.lte(1);
     case 'core::integer::u8':
-      return value.lte(2 ** 8);
+      return value.lte(2 ** 8 - 1);
     case 'core::integer::u16':
-      return value.lte(2 ** 16);
+      return value.lte(2 ** 16 - 1);
     case 'core::integer::u32':
-      return value.lte(2 ** 32);
+      return value.lte(2 ** 32 - 1);
     case 'core::integer::u64':
-      return value.lte(2 ** 64);
+      return value.lte(2 ** 64 - 1);
     case 'core::integer::u128':
       return value.lte(uint256.UINT_128_MAX.toString());
     case 'core::felt252':
       return value.lte(uint256.UINT_128_MAX.toString());
+    default:
+      return false;
   }
-  return false;
 }
 
 // Add Methods here
+// @ts-ignore
 Yup.addMethod(Yup.string, 'validate_core_type', function (type: string) {
   return this.test('check inputs', type, function (val) {
     const { createError } = this;

@@ -120,9 +120,7 @@ type ABIFunctionInputs = Yup.InferType<typeof yupAbiInputSchema>;
 const abiSchema = Yup.array().of(
   Yup.object().test(
     'schema-test',
-    'Must follow schema of \
-        respective type, if type: \
-        "function" | "constructor" | "l1_handler" | "struct" | "enum" | "interface" | "impl" | "event"',
+    'Must follow schema of respective type, if type: "function" | "constructor" | "l1_handler" | "struct" | "enum" | "interface" | "impl" | "event"',
     (value: any) => {
       try {
         switch (value.type) {

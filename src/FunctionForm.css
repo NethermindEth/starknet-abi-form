@@ -12,8 +12,15 @@
   margin: 0.2rem 0rem;
 }
 
+.array-wrapper {
+  border: 1px solid rebeccapurple;
+  padding: 0.3rem;
+  border-radius: 0.5rem;
+}
+
 .input-wrapper {
   margin: 0.5rem 0rem;
+  width: 50%;
 }
 
 .btn {
