@@ -1,6 +1,6 @@
 import './ABIForm.css';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { selector } from 'starknet';
 import { ABI, abiSchema } from './types/index';
@@ -10,6 +10,8 @@ import {
   segregateViewAndExternalFunctions,
 } from './types/helper';
 import FunctionForm from './FunctionForm';
+import { Content, List, Root, Trigger } from './UIComponents/Tabs/Tabs';
+import { ActiveTabClasses, DefaultTabClasses } from './utils/tailwindClasses';
 
 export type ABIFormProps = {
   abi?: ABI;
@@ -54,26 +56,54 @@ export const ABIForm: React.FC<ABIFormProps> = ({ abi }) => {
   //   }
   // }, [abi]);
 
+  const [activeTab, setActiveTab] = useState<'read' | 'write'>('write');
+
   return (
-    <div>
-      <p>Read</p>
-      {viewFunctions.map((viewFn) => (
-        <FunctionForm
-          key={`viewFn${selector.getSelectorFromName(viewFn?.name)}`}
-          functionAbi={viewFn}
-          structs={structs}
-          // enums={enums}
-        />
-      ))}
-      <p>Write</p>
-      {externalFunctions.map((externalFn) => (
-        <FunctionForm
-          key={`externalFn${selector.getSelectorFromName(externalFn?.name)}`}
-          functionAbi={externalFn}
-          structs={structs}
-          // enums={enums}
-        />
-      ))}
-    </div>
+    <Root value={activeTab}>
+      <List className="text-sm font-medium text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+        <Trigger
+          value="read"
+          className={
+            activeTab === 'read' ? ActiveTabClasses : DefaultTabClasses
+          }
+          onClick={() => {
+            setActiveTab('read');
+          }}
+        >
+          Read
+        </Trigger>
+        <Trigger
+          value="write"
+          className={
+            activeTab === 'write' ? ActiveTabClasses : DefaultTabClasses
+          }
+          onClick={() => {
+            setActiveTab('write');
+          }}
+        >
+          Write
+        </Trigger>
+      </List>
+      <Content value="read">
+        {viewFunctions.map((viewFn) => (
+          <FunctionForm
+            key={`viewFn${selector.getSelectorFromName(viewFn?.name)}`}
+            functionAbi={viewFn}
+            structs={structs}
+            // enums={enums}
+          />
+        ))}
+      </Content>
+      <Content value="write">
+        {externalFunctions.map((externalFn) => (
+          <FunctionForm
+            key={`externalFn${selector.getSelectorFromName(externalFn?.name)}`}
+            functionAbi={externalFn}
+            structs={structs}
+            // enums={enums}
+          />
+        ))}
+      </Content>
+    </Root>
   );
 };

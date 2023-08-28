@@ -46,6 +46,7 @@ module.exports = {
     'typescript-sort-keys/interface': 'error',
     'typescript-sort-keys/string-enum': 'error',
     'unused-imports/no-unused-imports': 'error',
+    'react/prop-types': 'off',
     'prefer-arrow/prefer-arrow-functions': [
       'error',
       {

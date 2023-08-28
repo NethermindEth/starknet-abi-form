@@ -39,6 +39,9 @@ function validateCoreType(type: string, val: string): boolean {
       return value.lte(uint256.UINT_128_MAX.toString());
     case 'core::felt252':
       return value.lte(uint256.UINT_128_MAX.toString());
+    case 'core::starknet::contract_address::ContractAddress':
+      // TODO: Add Proper Validation for address here.
+      return true;
     default:
       return false;
   }

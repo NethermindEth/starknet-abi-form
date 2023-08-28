@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { ABI, ABIFunction, ABIStruct, ABIEnum } from '.';
 
 export function extractFunctionFromRawAbi(abi: ABI, functions: ABIFunction[]) {
@@ -107,4 +108,41 @@ export function extractSubTypesFromType(type: string): ReturnExtractedSubTypes {
   return {
     contains: false,
   };
+}
+
+export const flattenArrays = (value: any) => _.flattenDeep(value);
+
+export const transformStringArrayToInteger = (value: string[]): number[] =>
+  value.map((lValue) => {
+    if (typeof lValue === 'string') {
+      if (!Number.isNaN(parseInt(lValue, 10))) {
+        return parseInt(lValue, 10);
+      }
+      return Number.NaN;
+    }
+    return lValue;
+  });
+
+export function flattenToRawCallData(value: any): any {
+  if (typeof value === 'string') {
+    return value;
+  }
+  if (Array.isArray(value)) {
+    return [
+      value.length,
+      ...value.map((lValue) => {
+        if (typeof lValue === 'string') {
+          return lValue;
+        }
+        return flattenToRawCallData(lValue);
+      }),
+    ];
+  }
+  if (typeof value === 'object') {
+    return Object.keys(value).map((key) => {
+      const curr = value[key];
+      return flattenToRawCallData(curr);
+    });
+  }
+  return '';
 }

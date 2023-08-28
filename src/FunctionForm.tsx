@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
@@ -12,6 +12,50 @@ import {
   extractValidationSchema,
   reduceFunctionInputs,
 } from './types/uiHelpers';
+import {
+  AccordionRoot,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from './UIComponents/Accordian/Accordian';
+import { Button } from './UIComponents/Button/Button';
+import Tag, { TagColors } from './UIComponents/Tag/Tag';
+import {
+  flattenArrays,
+  flattenToRawCallData,
+  transformStringArrayToInteger,
+} from './types/helper';
+
+const typeToTagColor = (name: string): TagColors => {
+  try {
+    const pathNames = name?.split('::');
+    const coreType = pathNames[pathNames.length - 1];
+    // console.log({pathNames, coreType})
+
+    switch (coreType) {
+      case 'u8':
+        return 'green';
+      case 'u16':
+        return 'green';
+      case 'u32':
+        return 'green';
+      case 'u64':
+        return 'green';
+      case 'u128':
+        return 'green';
+      case 'bool':
+        return 'indigo';
+      case 'felt252':
+        return 'yellow';
+      case 'ContractAddress':
+        return 'pink';
+      default:
+        return 'blue';
+    }
+  } catch (e) {
+    return 'blue';
+  }
+};
 
 type IFunctionForm = {
   functionAbi: ABIFunction;
@@ -79,17 +123,28 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
         }
 
         return (
-          <div className="input-wrapper" key={fullPath?.join('|')}>
-            <label htmlFor={`${name ? `${name}.` : ''}${key}`}>
-              {`${name ? `${name}.` : ''}${key}`} |{' '}
-              <span>{JSON.stringify(abiTypeInfo)}</span>
+          <div
+            className="my-2 w-full px-2 py-1 border-gray-200 border-2 rounded"
+            key={fullPath?.join('|')}
+          >
+            <label
+              htmlFor={`${name ? `${name}.` : ''}${key}`}
+              className="block mb-2 text-sm font-medium"
+            >
+              {`${name ? `${name}.` : ''}${key}`}
+              <Tag
+                style={{ marginLeft: '1rem' }}
+                tag={typeToTagColor(abiTypeInfo)}
+              >
+                {abiTypeInfo}
+              </Tag>
             </label>
             <input
               type="text"
               id={`${name ? `${name}.` : ''}${key}`}
               name={`${name ? `${name}.` : ''}${key}`}
               placeholder={`${name ? `${name}.` : ''}${key}`}
-              style={{ width: '100%' }}
+              className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
               onChange={handleChange}
             />
             <p className="input-error">{error}</p>
@@ -102,8 +157,11 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
       ) {
         const lParentKeys = parentKeys ? [...parentKeys, key] : [key];
         return (
-          <div className="border-struct" key={lParentKeys.join('|')}>
-            <p>struct: {key}</p>
+          <div
+            className="w-full flex flex-col shadow-md shadow-green-500 rounded p-2 my-2 bg-green-50"
+            key={lParentKeys.join('|')}
+          >
+            <p className="text-xl font-bold">struct: {key}</p>
             <ParseInputFieldsFromObject
               values={{ ...currentValueObject }}
               errors={errors}
@@ -133,9 +191,48 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
           }
         }
 
+        const [accordianTabsState, setAccordianTabsState] = useState<string[]>(
+          (): string[] => {
+            const retArr = currentValueObject
+              ? currentValueObject?.map((obj, index) => {
+                  const lParentKeys = parentKeys
+                    ? [...parentKeys, key, index.toString()]
+                    : [key, index.toString()];
+                  return lParentKeys.join('|');
+                })
+              : [];
+            return retArr;
+          }
+        );
+
         return (
-          <div className="array-wrapper">
-            <h5>Array: {key}</h5>
+          <AccordionRoot
+            type="multiple"
+            className="w-full shadow-sm shadow-purple-500 p-2 rounded bg-purple-50"
+            value={accordianTabsState}
+            onValueChange={(value) => {
+              const diff = loadashFp.difference(accordianTabsState, value);
+              if (diff.length > 0) {
+                const filteredAccordianTabsState = accordianTabsState.filter(
+                  (activeTab) => !diff.includes(activeTab)
+                );
+                setAccordianTabsState([...filteredAccordianTabsState]);
+                return;
+              }
+              setAccordianTabsState([...accordianTabsState, ...value]);
+            }}
+          >
+            <div className="flex justify-between items-center">
+              <h5 className="text-xl">Array: {key}</h5>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleArrayPush(pathKeys, initalObj);
+                }}
+              >
+                ADD +
+              </Button>
+            </div>
             {currentValueObject?.map((obj, index) => {
               const lParentKeys = parentKeys
                 ? [...parentKeys, key, index.toString()]
@@ -161,75 +258,108 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
                 const fullPath = lParentKeys;
 
                 let error = '';
+                let coreArrAbiTypeInfo = '';
 
                 if (loadashFp.has(errors, fullPath)) {
                   error = loadashFp.get(errors, fullPath);
                 }
 
+                // Since Type conform to initial state,
+                // For arrays index 0 will have the valid type.
+                const initialFullPathCoreArr = fullPath.map((pathItem) => {
+                  if (Number.isNaN(parseInt(pathItem, 10))) {
+                    return pathItem;
+                  }
+                  return '0';
+                });
+                if (loadashFp.has(abiTypes, initialFullPathCoreArr)) {
+                  coreArrAbiTypeInfo = loadashFp.get(
+                    abiTypes,
+                    initialFullPathCoreArr
+                  );
+                }
+
                 return (
-                  <div className="border-array-item" key={fullPath.join('|')}>
-                    <div className="input-wrapper">
-                      <label htmlFor={`${name}`}>{`${name}`}</label>
-                      <input
-                        type="text"
-                        name={`${name}`}
-                        id={`${name}`}
-                        placeholder={`${name}`}
-                        style={{ width: '100%' }}
-                        onChange={handleChange}
-                      />
-                      <p className="input-error">{error}</p>
-                    </div>
-                    <button
-                      type="button"
+                  <div
+                    className="w-full flex flex-col items-end shadow-md shadow-green-500 rounded p-2 bg-green-50 my-2"
+                    key={fullPath.join('|')}
+                  >
+                    <Button
+                      className="w-max"
+                      color="red"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleArrayPop(pathKeys, index);
                       }}
                     >
-                      DELETE -
-                    </button>
+                      DELETE
+                    </Button>
+                    <div className="my-2 w-full px-2 py-1 border-gray-200 border-2 rounded">
+                      <label
+                        htmlFor={`${name}`}
+                        className="block mb-2 text-sm font-medium"
+                      >
+                        {`${name}`}{' '}
+                        <Tag
+                          style={{ marginLeft: '1rem' }}
+                          tag={typeToTagColor(coreArrAbiTypeInfo)}
+                        >
+                          {coreArrAbiTypeInfo}
+                        </Tag>{' '}
+                      </label>
+                      <input
+                        type="text"
+                        name={`${name}`}
+                        id={`${name}`}
+                        placeholder={`${name}`}
+                        className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
+                        onChange={handleChange}
+                      />
+                      <p className="input-error">{error}</p>
+                    </div>
                   </div>
                 );
               }
 
               return (
-                <div className="border-array-item" key={lParentKeys.join('|')}>
-                  <p>
-                    {index + 1}. struct: {key}
-                  </p>
-                  <ParseInputFieldsFromObject
-                    values={{ ...obj }}
-                    errors={errors}
-                    initialValues={initialValues}
-                    abiTypes={abiTypes}
-                    parentKeys={lParentKeys}
-                    handleChange={handleChange}
-                    handleArrayPush={handleArrayPush}
-                    handleArrayPop={handleArrayPop}
-                  />
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleArrayPop(pathKeys, index);
-                    }}
-                  >
-                    DELETE -
-                  </button>
-                </div>
+                <AccordionItem
+                  value={lParentKeys.join('|')}
+                  className="w-full flex flex-col shadow-md shadow-green-500 rounded p-2 bg-green-50 my-2"
+                  key={lParentKeys.join('|')}
+                >
+                  <AccordionTrigger className="w-full hover:shadow-md hover:bg-slate-50 rounded">
+                    <div className="flex justify-between items-center w-full px-2">
+                      <p className="text-xl font-bold">
+                        {index + 1}. struct: {key}
+                      </p>
+
+                      <Button
+                        color="red"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleArrayPop(pathKeys, index);
+                        }}
+                      >
+                        DELETE -
+                      </Button>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <ParseInputFieldsFromObject
+                      values={{ ...obj }}
+                      errors={errors}
+                      initialValues={initialValues}
+                      abiTypes={abiTypes}
+                      parentKeys={lParentKeys}
+                      handleChange={handleChange}
+                      handleArrayPush={handleArrayPush}
+                      handleArrayPop={handleArrayPop}
+                    />
+                  </AccordionContent>
+                </AccordionItem>
               );
             })}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleArrayPush(pathKeys, initalObj);
-              }}
-            >
-              ADD +
-            </button>
-          </div>
+          </AccordionRoot>
         );
       }
       return '';
@@ -267,8 +397,24 @@ const FunctionForm: React.FC<IFunctionForm> = ({
     },
     validationSchema: Yup.object(validationSchema),
     onSubmit: (finalValues) => {
-      // @ts-ignore
-      console.log('final values:', { finalValues });
+      try {
+        const starkliValues = transformStringArrayToInteger(
+          flattenArrays(flattenToRawCallData(finalValues)) as string[]
+        );
+        // @ts-ignore
+        console.log('final values:', {
+          raw: finalValues,
+          starkli: starkliValues,
+          starkliString: starkliValues.join(' '),
+          starkliHexString: starkliValues
+            .map((v) => `0x${v.toString(15)}`)
+            .join(' '),
+        });
+      } catch (e) {
+        console.log({
+          raw: finalValues,
+        });
+      }
     },
   });
 
@@ -295,12 +441,22 @@ const FunctionForm: React.FC<IFunctionForm> = ({
   };
 
   return (
-    <div>
-      <h5>
-        {functionAbi?.name}(
-        {functionAbi?.inputs?.map((ip) => `${ip?.name}: ${ip?.type}`).join(',')}
+    <div className="bg-slate-100 p-3 rounded my-2 shadow-md">
+      <div className="flex items-center">
+        <p className="mr-2 text-md font-bold text-black  ">
+          {functionAbi?.name}
+        </p>
+        (
+        {functionAbi?.inputs?.map((ip) => (
+          <React.Fragment key={ip?.name}>
+            <span className="mr-2 text-sm font-normal dark:text-gray-400">
+              {ip?.name}:
+            </span>
+            <Tag color={typeToTagColor(ip?.type)}>{ip?.type}</Tag>
+          </React.Fragment>
+        ))}
         )
-      </h5>
+      </div>
       <form onSubmit={handleSubmit}>
         <ParseInputFieldsFromObject
           values={values}
@@ -311,7 +467,9 @@ const FunctionForm: React.FC<IFunctionForm> = ({
           handleArrayPush={handleArrayPush}
           handleArrayPop={handleArrayPop}
         />
-        <button type="submit">Call</button>
+        <Button type="submit" color="purple" className="my-2">
+          Call
+        </Button>
       </form>
     </div>
   );
