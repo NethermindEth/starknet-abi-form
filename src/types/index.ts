@@ -32,16 +32,16 @@ const yupAbiEventKindSchema = Yup.string()
 const yupAbiEventFieldSchema = Yup.object().shape({
   name: Yup.string().strict(true).required(),
   type: Yup.string().strict(true).required(),
-  kind: Yup.string().strict(true).required().oneOf(['key', 'data', 'nested']),
+  kind: Yup.string().strict(true).oneOf(['key', 'data', 'nested']),
 });
 
 const yupAbiEnumEventSchema = Yup.object().shape({
-  kind: Yup.string().strict(true).required().oneOf(['enum']),
+  kind: Yup.string().strict(true).oneOf(['enum']),
   variants: yupAbiEventFieldSchema,
 });
 
 const yupAbiStructEventSchema = Yup.object().shape({
-  kind: Yup.string().strict(true).required().oneOf(['struct']),
+  kind: Yup.string().strict(true).oneOf(['struct']),
   members: yupAbiEventFieldSchema,
 });
 

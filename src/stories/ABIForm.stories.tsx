@@ -911,176 +911,176 @@ export const Primary = Template.bind({});
 // ];
 
 // Sample ABI 2
-// const sampleAbi = [
-//   {
-//     type: 'impl',
-//     name: 'Balance',
-//     interface_name: 'scarb_test::IBalance',
-//   },
-//   {
-//     type: 'interface',
-//     name: 'scarb_test::IBalance',
-//     items: [
-//       {
-//         type: 'function',
-//         name: 'get',
-//         inputs: [],
-//         outputs: [
-//           {
-//             type: 'core::integer::u128',
-//           },
-//         ],
-//         state_mutability: 'view',
-//       },
-//       {
-//         type: 'function',
-//         name: 'increase',
-//         inputs: [
-//           {
-//             name: 'a',
-//             type: 'core::integer::u128',
-//           },
-//         ],
-//         outputs: [],
-//         state_mutability: 'external',
-//       },
-//       {
-//         type: 'function',
-//         name: 'decrease',
-//         inputs: [
-//           {
-//             name: 'decrease_by',
-//             type: 'core::integer::u128',
-//           },
-//         ],
-//         outputs: [],
-//         state_mutability: 'external',
-//       },
-//     ],
-//   },
-//   {
-//     type: 'struct',
-//     name: 'core::integer::u256',
-//     members: [
-//       {
-//         name: 'low',
-//         type: 'core::integer::u128',
-//       },
-//       {
-//         name: 'high',
-//         type: 'core::integer::u128',
-//       },
-//     ],
-//   },
-//   {
-//     type: 'enum',
-//     name: 'core::bool',
-//     variants: [
-//       {
-//         name: 'False',
-//         type: '()',
-//       },
-//       {
-//         name: 'True',
-//         type: '()',
-//       },
-//     ],
-//   },
-//   {
-//     type: 'struct',
-//     name: 'scarb_test::Balance::VoteDetails',
-//     members: [
-//       {
-//         name: 'name',
-//         type: 'core::integer::u256',
-//       },
-//       {
-//         name: 'party',
-//         type: 'core::integer::u256',
-//       },
-//       {
-//         name: 'conclusion',
-//         type: 'core::integer::u8',
-//       },
-//     ],
-//   },
-//   {
-//     type: 'struct',
-//     name: 'scarb_test::Balance::Status',
-//     members: [
-//       {
-//         name: 'voted',
-//         type: 'core::bool',
-//       },
-//       {
-//         name: 'timestamp',
-//         type: 'core::integer::u64',
-//       },
-//       {
-//         name: 'details',
-//         type: 'core::array::Array::<scarb_test::Balance::VoteDetails>',
-//       },
-//     ],
-//   },
-//   {
-//     type: 'struct',
-//     name: 'scarb_test::Balance::Complex',
-//     members: [
-//       {
-//         name: 'name',
-//         type: 'core::integer::u256',
-//       },
-//       {
-//         name: 'age',
-//         type: 'core::integer::u16',
-//       },
-//       {
-//         name: 'status',
-//         type: 'core::bool',
-//       },
-//       {
-//         name: 'votes',
-//         type: 'core::array::Array::<core::integer::u256>',
-//       },
-//       {
-//         name: 'statue',
-//         type: 'scarb_test::Balance::Status',
-//       },
-//     ],
-//   },
-//   {
-//     type: 'function',
-//     name: 'complex_input',
-//     inputs: [
-//       {
-//         name: 'complex',
-//         type: 'scarb_test::Balance::Complex',
-//       },
-//     ],
-//     outputs: [],
-//     state_mutability: 'external',
-//   },
-//   {
-//     type: 'constructor',
-//     name: 'constructor',
-//     inputs: [
-//       {
-//         name: 'value_',
-//         type: 'core::integer::u128',
-//       },
-//     ],
-//   },
-//   {
-//     type: 'event',
-//     name: 'scarb_test::Balance::Event',
-//     kind: 'enum',
-//     variants: [],
-//   },
-// ];
+const sampleAbi = [
+  {
+    type: 'impl',
+    name: 'Balance',
+    interface_name: 'scarb_test::IBalance',
+  },
+  {
+    type: 'interface',
+    name: 'scarb_test::IBalance',
+    items: [
+      {
+        type: 'function',
+        name: 'get',
+        inputs: [],
+        outputs: [
+          {
+            type: 'core::integer::u128',
+          },
+        ],
+        state_mutability: 'view',
+      },
+      {
+        type: 'function',
+        name: 'increase',
+        inputs: [
+          {
+            name: 'a',
+            type: 'core::integer::u128',
+          },
+        ],
+        outputs: [],
+        state_mutability: 'external',
+      },
+      {
+        type: 'function',
+        name: 'decrease',
+        inputs: [
+          {
+            name: 'decrease_by',
+            type: 'core::integer::u128',
+          },
+        ],
+        outputs: [],
+        state_mutability: 'external',
+      },
+    ],
+  },
+  {
+    type: 'struct',
+    name: 'core::integer::u256',
+    members: [
+      {
+        name: 'low',
+        type: 'core::integer::u128',
+      },
+      {
+        name: 'high',
+        type: 'core::integer::u128',
+      },
+    ],
+  },
+  {
+    type: 'enum',
+    name: 'core::bool',
+    variants: [
+      {
+        name: 'False',
+        type: '()',
+      },
+      {
+        name: 'True',
+        type: '()',
+      },
+    ],
+  },
+  {
+    type: 'struct',
+    name: 'scarb_test::Balance::VoteDetails',
+    members: [
+      {
+        name: 'name',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'party',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'conclusion',
+        type: 'core::integer::u8',
+      },
+    ],
+  },
+  {
+    type: 'struct',
+    name: 'scarb_test::Balance::Status',
+    members: [
+      {
+        name: 'voted',
+        type: 'core::bool',
+      },
+      {
+        name: 'timestamp',
+        type: 'core::integer::u64',
+      },
+      {
+        name: 'details',
+        type: 'core::array::Array::<scarb_test::Balance::VoteDetails>',
+      },
+    ],
+  },
+  {
+    type: 'struct',
+    name: 'scarb_test::Balance::Complex',
+    members: [
+      {
+        name: 'name',
+        type: 'core::integer::u256',
+      },
+      {
+        name: 'age',
+        type: 'core::integer::u16',
+      },
+      {
+        name: 'status',
+        type: 'core::bool',
+      },
+      {
+        name: 'votes',
+        type: 'core::array::Array::<core::integer::u256>',
+      },
+      {
+        name: 'statue',
+        type: 'scarb_test::Balance::Status',
+      },
+    ],
+  },
+  {
+    type: 'function',
+    name: 'complex_input',
+    inputs: [
+      {
+        name: 'complex',
+        type: 'scarb_test::Balance::Complex',
+      },
+    ],
+    outputs: [],
+    state_mutability: 'external',
+  },
+  {
+    type: 'constructor',
+    name: 'constructor',
+    inputs: [
+      {
+        name: 'value_',
+        type: 'core::integer::u128',
+      },
+    ],
+  },
+  {
+    type: 'event',
+    name: 'scarb_test::Balance::Event',
+    kind: 'enum',
+    variants: [],
+  },
+];
 
 // Sample ABI 3
 // Goerli Contract Address: 0x0370f2bcbee32a4af36fb3acc7e5b385cda66529063719262e64c21841a907ff
-// const sampleAbi3 = [
+// const sampleAbi = [
 //   {
 //     type: 'function',
 //     name: 'constructor',
@@ -2072,200 +2072,200 @@ export const Primary = Template.bind({});
 
 // Sample ABI 6
 // Goerli Contract Address: 0x0571229a6620BaDD612EA5995Ed64F32398C1e552A3dAdAbb8a1758b267Aa450
-const sampleAbi = [
-  {
-    type: 'struct',
-    name: 'core::integer::u256',
-    members: [
-      {
-        name: 'low',
-        type: 'core::integer::u128',
-      },
-      {
-        name: 'high',
-        type: 'core::integer::u128',
-      },
-    ],
-  },
-  {
-    type: 'constructor',
-    name: 'constructor',
-    inputs: [
-      {
-        name: 'initial_supply',
-        type: 'core::integer::u256',
-      },
-      {
-        name: 'recipient',
-        type: 'core::starknet::contract_address::ContractAddress',
-      },
-    ],
-  },
-  {
-    type: 'function',
-    name: 'name',
-    inputs: [],
-    outputs: [
-      {
-        type: 'core::felt252',
-      },
-    ],
-    state_mutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'symbol',
-    inputs: [],
-    outputs: [
-      {
-        type: 'core::felt252',
-      },
-    ],
-    state_mutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'decimals',
-    inputs: [],
-    outputs: [
-      {
-        type: 'core::integer::u8',
-      },
-    ],
-    state_mutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'total_supply',
-    inputs: [],
-    outputs: [
-      {
-        type: 'core::integer::u256',
-      },
-    ],
-    state_mutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'balance_of',
-    inputs: [
-      {
-        name: 'account',
-        type: 'core::starknet::contract_address::ContractAddress',
-      },
-    ],
-    outputs: [
-      {
-        type: 'core::integer::u256',
-      },
-    ],
-    state_mutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'allowance',
-    inputs: [
-      {
-        name: 'owner',
-        type: 'core::starknet::contract_address::ContractAddress',
-      },
-      {
-        name: 'spender',
-        type: 'core::starknet::contract_address::ContractAddress',
-      },
-    ],
-    outputs: [
-      {
-        type: 'core::integer::u256',
-      },
-    ],
-    state_mutability: 'view',
-  },
-  {
-    type: 'enum',
-    name: 'core::bool',
-    variants: [
-      {
-        name: 'False',
-        type: '()',
-      },
-      {
-        name: 'True',
-        type: '()',
-      },
-    ],
-  },
-  {
-    type: 'function',
-    name: 'transfer',
-    inputs: [
-      {
-        name: 'recipient',
-        type: 'core::starknet::contract_address::ContractAddress',
-      },
-      {
-        name: 'amount',
-        type: 'core::integer::u256',
-      },
-    ],
-    outputs: [
-      {
-        type: 'core::bool',
-      },
-    ],
-    state_mutability: 'external',
-  },
-  {
-    type: 'function',
-    name: 'transfer_from',
-    inputs: [
-      {
-        name: 'sender',
-        type: 'core::starknet::contract_address::ContractAddress',
-      },
-      {
-        name: 'recipient',
-        type: 'core::starknet::contract_address::ContractAddress',
-      },
-      {
-        name: 'amount',
-        type: 'core::integer::u256',
-      },
-    ],
-    outputs: [
-      {
-        type: 'core::bool',
-      },
-    ],
-    state_mutability: 'external',
-  },
-  {
-    type: 'function',
-    name: 'approve',
-    inputs: [
-      {
-        name: 'spender',
-        type: 'core::starknet::contract_address::ContractAddress',
-      },
-      {
-        name: 'amount',
-        type: 'core::integer::u256',
-      },
-    ],
-    outputs: [
-      {
-        type: 'core::bool',
-      },
-    ],
-    state_mutability: 'external',
-  },
-  {
-    type: 'event',
-    name: 'erc20::MyToken::Event',
-    kind: 'enum',
-    variants: [],
-  },
-];
+// const sampleAbi = [
+//   {
+//     type: 'struct',
+//     name: 'core::integer::u256',
+//     members: [
+//       {
+//         name: 'low',
+//         type: 'core::integer::u128',
+//       },
+//       {
+//         name: 'high',
+//         type: 'core::integer::u128',
+//       },
+//     ],
+//   },
+//   {
+//     type: 'constructor',
+//     name: 'constructor',
+//     inputs: [
+//       {
+//         name: 'initial_supply',
+//         type: 'core::integer::u256',
+//       },
+//       {
+//         name: 'recipient',
+//         type: 'core::starknet::contract_address::ContractAddress',
+//       },
+//     ],
+//   },
+//   {
+//     type: 'function',
+//     name: 'name',
+//     inputs: [],
+//     outputs: [
+//       {
+//         type: 'core::felt252',
+//       },
+//     ],
+//     state_mutability: 'view',
+//   },
+//   {
+//     type: 'function',
+//     name: 'symbol',
+//     inputs: [],
+//     outputs: [
+//       {
+//         type: 'core::felt252',
+//       },
+//     ],
+//     state_mutability: 'view',
+//   },
+//   {
+//     type: 'function',
+//     name: 'decimals',
+//     inputs: [],
+//     outputs: [
+//       {
+//         type: 'core::integer::u8',
+//       },
+//     ],
+//     state_mutability: 'view',
+//   },
+//   {
+//     type: 'function',
+//     name: 'total_supply',
+//     inputs: [],
+//     outputs: [
+//       {
+//         type: 'core::integer::u256',
+//       },
+//     ],
+//     state_mutability: 'view',
+//   },
+//   {
+//     type: 'function',
+//     name: 'balance_of',
+//     inputs: [
+//       {
+//         name: 'account',
+//         type: 'core::starknet::contract_address::ContractAddress',
+//       },
+//     ],
+//     outputs: [
+//       {
+//         type: 'core::integer::u256',
+//       },
+//     ],
+//     state_mutability: 'view',
+//   },
+//   {
+//     type: 'function',
+//     name: 'allowance',
+//     inputs: [
+//       {
+//         name: 'owner',
+//         type: 'core::starknet::contract_address::ContractAddress',
+//       },
+//       {
+//         name: 'spender',
+//         type: 'core::starknet::contract_address::ContractAddress',
+//       },
+//     ],
+//     outputs: [
+//       {
+//         type: 'core::integer::u256',
+//       },
+//     ],
+//     state_mutability: 'view',
+//   },
+//   {
+//     type: 'enum',
+//     name: 'core::bool',
+//     variants: [
+//       {
+//         name: 'False',
+//         type: '()',
+//       },
+//       {
+//         name: 'True',
+//         type: '()',
+//       },
+//     ],
+//   },
+//   {
+//     type: 'function',
+//     name: 'transfer',
+//     inputs: [
+//       {
+//         name: 'recipient',
+//         type: 'core::starknet::contract_address::ContractAddress',
+//       },
+//       {
+//         name: 'amount',
+//         type: 'core::integer::u256',
+//       },
+//     ],
+//     outputs: [
+//       {
+//         type: 'core::bool',
+//       },
+//     ],
+//     state_mutability: 'external',
+//   },
+//   {
+//     type: 'function',
+//     name: 'transfer_from',
+//     inputs: [
+//       {
+//         name: 'sender',
+//         type: 'core::starknet::contract_address::ContractAddress',
+//       },
+//       {
+//         name: 'recipient',
+//         type: 'core::starknet::contract_address::ContractAddress',
+//       },
+//       {
+//         name: 'amount',
+//         type: 'core::integer::u256',
+//       },
+//     ],
+//     outputs: [
+//       {
+//         type: 'core::bool',
+//       },
+//     ],
+//     state_mutability: 'external',
+//   },
+//   {
+//     type: 'function',
+//     name: 'approve',
+//     inputs: [
+//       {
+//         name: 'spender',
+//         type: 'core::starknet::contract_address::ContractAddress',
+//       },
+//       {
+//         name: 'amount',
+//         type: 'core::integer::u256',
+//       },
+//     ],
+//     outputs: [
+//       {
+//         type: 'core::bool',
+//       },
+//     ],
+//     state_mutability: 'external',
+//   },
+//   {
+//     type: 'event',
+//     name: 'erc20::MyToken::Event',
+//     kind: 'enum',
+//     variants: [],
+//   },
+// ];
 
 Primary.args = {
   abi: sampleAbi,

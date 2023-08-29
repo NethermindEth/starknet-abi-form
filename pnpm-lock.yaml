@@ -181,6 +181,9 @@ devDependencies:
   husky:
     specifier: 8.0.3
     version: 8.0.3
+  jotai:
+    specifier: ^2.4.0
+    version: 2.4.0(@types/react@18.2.19)(react@18.2.0)
   jsdom:
     specifier: ^22.1.0
     version: 22.1.0
@@ -2175,7 +2178,7 @@ packages:
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
       resolve-from: 5.0.0
-      ts-node: 10.9.1(@swc/core@1.3.78)(@types/node@20.4.8)(typescript@5.1.6)
+      ts-node: 10.9.1(@swc/core@1.3.78)(@types/node@20.4.7)(typescript@5.1.6)
       typescript: 5.1.6
     transitivePeerDependencies:
       - '@swc/core'
@@ -9051,7 +9054,7 @@ packages:
     dependencies:
       '@types/node': 20.4.7
       cosmiconfig: 8.2.0
-      ts-node: 10.9.1(@swc/core@1.3.78)(@types/node@20.4.8)(typescript@5.1.6)
+      ts-node: 10.9.1(@swc/core@1.3.78)(@types/node@20.4.7)(typescript@5.1.6)
       typescript: 5.1.6
     dev: true
 
@@ -13316,6 +13319,25 @@ packages:
         integrity: sha512-5eEbBDQT/jF1xg6l36P+mWGGoH9Spuy0PCdSr2dtWRDGC6ph/w9ZCL4lmESW8f8F7MwT3XKescfP0wnZWAKL9w==,
       }
     hasBin: true
+    dev: true
+
+  /jotai@2.4.0(@types/react@18.2.19)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-NUHJdAJe3C8Prf0DD6EzezCATjkNvfCNI7pgkaX7bCPPsqE0oK8L9RzZsEhz/UxFoGRayXwacTvAli0VEYKkqQ==,
+      }
+    engines: { node: '>=12.20.0' }
+    peerDependencies:
+      '@types/react': '>=17.0.0'
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      '@types/react': 18.2.19
+      react: 18.2.0
     dev: true
 
   /joycon@3.1.1:
@@ -18443,6 +18465,42 @@ packages:
       {
         integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==,
       }
+    dev: true
+
+  /ts-node@10.9.1(@swc/core@1.3.78)(@types/node@20.4.7)(typescript@5.1.6):
+    resolution:
+      {
+        integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==,
+      }
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@swc/core': '>=1.2.50'
+      '@swc/wasm': '>=1.2.50'
+      '@types/node': '*'
+      typescript: '>=2.7'
+    peerDependenciesMeta:
+      '@swc/core':
+        optional: true
+      '@swc/wasm':
+        optional: true
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@swc/core': 1.3.78
+      '@tsconfig/node10': 1.0.9
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 20.4.7
+      acorn: 8.10.0
+      acorn-walk: 8.2.0
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 5.1.6
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
     dev: true
 
   /ts-node@10.9.1(@swc/core@1.3.78)(@types/node@20.4.8)(typescript@5.1.6):

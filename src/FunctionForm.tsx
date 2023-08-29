@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import loadashFp from 'lodash';
+import { useAtom } from 'jotai';
 import { ABIFunction, ABIStruct, yupAbiFunctionSchema } from './types';
 
 import './FunctionForm.css';
@@ -26,6 +27,7 @@ import {
   transformStringArrayToInteger,
 } from './types/helper';
 import { CallbackReturnType } from './ABIForm';
+import { formsAtom } from './atoms';
 
 const typeToTagColor = (name: string): TagColors => {
   try {
@@ -100,6 +102,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
 
         const fullPath = parentKeys ? [...parentKeys, key] : [key];
         let error = '';
+
         let abiTypeInfo = '';
         if (loadashFp.has(errors, fullPath)) {
           error = loadashFp.get(errors, fullPath);
@@ -139,6 +142,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
               id={`${name ? `${name}.` : ''}${key}`}
               name={`${name ? `${name}.` : ''}${key}`}
               placeholder={`${name ? `${name}.` : ''}${key}`}
+              value={currentValueObject}
               className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
               onChange={handleChange}
             />
@@ -306,6 +310,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
                         type="text"
                         name={`${name}`}
                         id={`${name}`}
+                        value={obj}
                         placeholder={`${name}`}
                         className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
                         onChange={handleChange}
@@ -380,6 +385,7 @@ const FunctionForm: React.FC<IFunctionForm> = ({
   try {
     yupAbiFunctionSchema.validateSync(functionAbi);
   } catch (e) {
+    console.error(e);
     return <p>Not a valid function ABI</p>;
   }
 
@@ -393,6 +399,13 @@ const FunctionForm: React.FC<IFunctionForm> = ({
   );
   const abiTypesInfo = Object.freeze(extractAbiTypes(initialValuesMap));
   // console.log({ initialValues, validationSchema, abiTypesInfo });
+
+  // Persistent State on Jotai
+  const [formStates, setFormsState] = useAtom(formsAtom);
+
+  const oldFormStates = formStates[functionAbi.name];
+
+  // console.log(functionAbi?.name, { oldFormStates });
 
   const { values, errors, setValues, handleChange, handleSubmit } = useFormik({
     initialValues: {
@@ -426,6 +439,22 @@ const FunctionForm: React.FC<IFunctionForm> = ({
       }
     },
   });
+
+  useEffect(() => {
+    if (oldFormStates) {
+      setValues(oldFormStates);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Update the Atom with a function name key
+    if (!loadashFp.isEqual(initialValues, values)) {
+      setFormsState({
+        ...formStates,
+        [functionAbi.name]: values,
+      });
+    }
+  }, [values]);
 
   // console.log(values, errors, dirty);
 

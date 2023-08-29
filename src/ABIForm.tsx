@@ -32,6 +32,7 @@ export const ABIForm: React.FC<ABIFormProps> = ({ abi, callBackFn }) => {
   try {
     abiSchema.validateSync(abi);
   } catch (e) {
+    console.error(e);
     return <p>Not a Valid ABI Schema</p>;
   }
 
