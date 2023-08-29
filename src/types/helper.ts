@@ -112,13 +112,10 @@ export function extractSubTypesFromType(type: string): ReturnExtractedSubTypes {
 
 export const flattenArrays = (value: any) => _.flattenDeep(value);
 
-export const transformStringArrayToInteger = (value: string[]): number[] =>
+export const transformStringArrayToInteger = (value: string[]): bigint[] =>
   value.map((lValue) => {
     if (typeof lValue === 'string') {
-      if (!Number.isNaN(parseInt(lValue, 10))) {
-        return parseInt(lValue, 10);
-      }
-      return Number.NaN;
+      return BigInt(lValue);
     }
     return lValue;
   });

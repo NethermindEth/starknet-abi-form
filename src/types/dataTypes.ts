@@ -1,4 +1,3 @@
-import { uint256 } from 'starknet';
 import { BigNumber } from 'bignumber.js';
 import * as Yup from 'yup';
 
@@ -36,9 +35,11 @@ function validateCoreType(type: string, val: string): boolean {
     case 'core::integer::u64':
       return value.lte(2 ** 64 - 1);
     case 'core::integer::u128':
-      return value.lte(uint256.UINT_128_MAX.toString());
+      return value.lte('340282366920938463463374607431768211455');
     case 'core::felt252':
-      return value.lte(uint256.UINT_128_MAX.toString());
+      return value.lte(
+        '3618502788666131213697322783095070105623107215331596699973092056135872020480'
+      );
     case 'core::starknet::contract_address::ContractAddress':
       // TODO: Add Proper Validation for address here.
       return true;

@@ -25,6 +25,7 @@ import {
   flattenToRawCallData,
   transformStringArrayToInteger,
 } from './types/helper';
+import { CallbackReturnType } from './ABIForm';
 
 const typeToTagColor = (name: string): TagColors => {
   try {
@@ -55,12 +56,6 @@ const typeToTagColor = (name: string): TagColors => {
   } catch (e) {
     return 'blue';
   }
-};
-
-type IFunctionForm = {
-  functionAbi: ABIFunction;
-  structs: ABIStruct[];
-  // enums: ABIEnum[];
 };
 
 type IParseInputFieldsFromObject = {
@@ -368,9 +363,17 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
   return <p>Could not parse type!!</p>;
 };
 
+type IFunctionForm = {
+  callbackFn: (value: CallbackReturnType) => void;
+  functionAbi: ABIFunction;
+  structs: ABIStruct[];
+  // enums: ABIEnum[];
+};
+
 const FunctionForm: React.FC<IFunctionForm> = ({
   functionAbi,
   structs,
+  callbackFn,
   // enums,
 }) => {
   // Check if functionAbi is correct with yup validation schema
@@ -401,18 +404,24 @@ const FunctionForm: React.FC<IFunctionForm> = ({
         const starkliValues = transformStringArrayToInteger(
           flattenArrays(flattenToRawCallData(finalValues)) as string[]
         );
-        // @ts-ignore
-        console.log('final values:', {
+
+        const callbackReturnValues: CallbackReturnType = {
           raw: finalValues,
-          starkli: starkliValues,
-          starkliString: starkliValues.join(' '),
-          starkliHexString: starkliValues
-            .map((v) => `0x${v.toString(15)}`)
-            .join(' '),
-        });
+          functionName: functionAbi?.name,
+          stateMutability: functionAbi?.state_mutability,
+          starkli: {
+            bigint: starkliValues,
+            decimal: starkliValues.map((v) => v.toString(10)).join(' '),
+            hex: starkliValues.map((v) => `0x${v.toString(16)}`).join(' '),
+          },
+        };
+        callbackFn(callbackReturnValues);
       } catch (e) {
-        console.log({
+        console.error(e);
+        callbackFn({
           raw: finalValues,
+          functionName: functionAbi?.name,
+          stateMutability: functionAbi?.state_mutability,
         });
       }
     },

@@ -2,7 +2,6 @@ import './ABIForm.css';
 
 import React, { useMemo, useState } from 'react';
 
-import { selector } from 'starknet';
 import { ABI, abiSchema } from './types/index';
 import {
   extractFunctionFromRawAbi,
@@ -13,11 +12,23 @@ import FunctionForm from './FunctionForm';
 import { Content, List, Root, Trigger } from './UIComponents/Tabs/Tabs';
 import { ActiveTabClasses, DefaultTabClasses } from './utils/tailwindClasses';
 
-export type ABIFormProps = {
-  abi?: ABI;
+export type CallbackReturnType = {
+  functionName: string;
+  raw: {};
+  starkli?: {
+    bigint: bigint[];
+    decimal: string;
+    hex: string;
+  };
+  stateMutability: 'view' | 'external';
 };
 
-export const ABIForm: React.FC<ABIFormProps> = ({ abi }) => {
+export type ABIFormProps = {
+  abi?: ABI;
+  callBackFn: (value: CallbackReturnType) => void;
+};
+
+export const ABIForm: React.FC<ABIFormProps> = ({ abi, callBackFn }) => {
   try {
     abiSchema.validateSync(abi);
   } catch (e) {
@@ -87,9 +98,10 @@ export const ABIForm: React.FC<ABIFormProps> = ({ abi }) => {
       <Content value="read">
         {viewFunctions.map((viewFn) => (
           <FunctionForm
-            key={`viewFn${selector.getSelectorFromName(viewFn?.name)}`}
+            key={`viewFn-${viewFn.name}`}
             functionAbi={viewFn}
             structs={structs}
+            callbackFn={callBackFn}
             // enums={enums}
           />
         ))}
@@ -97,9 +109,10 @@ export const ABIForm: React.FC<ABIFormProps> = ({ abi }) => {
       <Content value="write">
         {externalFunctions.map((externalFn) => (
           <FunctionForm
-            key={`externalFn${selector.getSelectorFromName(externalFn?.name)}`}
+            key={`externalFn-${externalFn.name}`}
             functionAbi={externalFn}
             structs={structs}
+            callbackFn={callBackFn}
             // enums={enums}
           />
         ))}
