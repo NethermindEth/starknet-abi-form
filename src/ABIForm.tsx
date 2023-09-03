@@ -20,15 +20,21 @@ export type CallbackReturnType = {
     decimal: string;
     hex: string;
   };
+  starknetjs?: any[];
   stateMutability: 'view' | 'external';
 };
 
 export type ABIFormProps = {
   abi?: ABI;
   callBackFn: (value: CallbackReturnType) => void;
+  responses?: Record<string, React.ReactNode>;
 };
 
-export const ABIForm: React.FC<ABIFormProps> = ({ abi, callBackFn }) => {
+export const ABIForm: React.FC<ABIFormProps> = ({
+  abi,
+  callBackFn,
+  responses,
+}) => {
   try {
     abiSchema.validateSync(abi);
   } catch (e) {
@@ -103,6 +109,7 @@ export const ABIForm: React.FC<ABIFormProps> = ({ abi, callBackFn }) => {
             functionAbi={viewFn}
             structs={structs}
             callbackFn={callBackFn}
+            response={responses && responses[viewFn?.name]}
             // enums={enums}
           />
         ))}
@@ -114,6 +121,7 @@ export const ABIForm: React.FC<ABIFormProps> = ({ abi, callBackFn }) => {
             functionAbi={externalFn}
             structs={structs}
             callbackFn={callBackFn}
+            response={responses && responses[externalFn?.name]}
             // enums={enums}
           />
         ))}

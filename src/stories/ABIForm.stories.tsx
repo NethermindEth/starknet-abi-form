@@ -2,6 +2,7 @@ import React from 'react';
 import { Meta, StoryFn } from '@storybook/react';
 
 import { ABIForm } from '..';
+import useResponseUI from '../hooks/useResponse';
 
 export default {
   title: 'ABIForm',
@@ -9,7 +10,13 @@ export default {
   argTypes: {},
 } as Meta<typeof ABIForm>;
 
-const Template: StoryFn<typeof ABIForm> = (args) => <ABIForm {...args} />;
+const Template: StoryFn<typeof ABIForm> = (args) => {
+  const { responses } = useResponseUI({
+    complex_input: <div>Test Response</div>,
+  });
+
+  return <ABIForm {...args} responses={responses} />;
+};
 
 export const Primary = Template.bind({});
 
@@ -2270,6 +2277,7 @@ const sampleAbi = [
 Primary.args = {
   abi: sampleAbi,
   callBackFn: (value) => {
+    // @ts-ignore
     console.log({ storybook: value });
   },
 };

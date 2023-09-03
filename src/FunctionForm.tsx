@@ -19,7 +19,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from './UIComponents/Accordian/Accordian';
-import { Button } from './UIComponents/Button/Button';
+import { Button, ButtonColorsClasses } from './UIComponents/Button/Button';
 import Tag, { TagColors } from './UIComponents/Tag/Tag';
 import {
   flattenArrays,
@@ -207,6 +207,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
         return (
           <AccordionRoot
             type="multiple"
+            key={`accordion-root|${pathKeys.join('|')}`}
             className="w-full shadow-sm shadow-purple-500 p-2 rounded bg-purple-50"
             value={accordianTabsState}
             onValueChange={(value) => {
@@ -332,16 +333,21 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
                       <p className="text-xl font-bold">
                         {index + 1}. struct: {key}
                       </p>
-
-                      <Button
-                        color="red"
+                      <div
+                        className={ButtonColorsClasses.red}
+                        role="button"
+                        tabIndex={0}
                         onClick={(e) => {
+                          e.stopPropagation();
+                          handleArrayPop(pathKeys, index);
+                        }}
+                        onKeyDown={(e) => {
                           e.stopPropagation();
                           handleArrayPop(pathKeys, index);
                         }}
                       >
                         DELETE -
-                      </Button>
+                      </div>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
@@ -371,6 +377,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
 type IFunctionForm = {
   callbackFn: (value: CallbackReturnType) => void;
   functionAbi: ABIFunction;
+  response?: React.ReactNode;
   structs: ABIStruct[];
   // enums: ABIEnum[];
 };
@@ -379,6 +386,7 @@ const FunctionForm: React.FC<IFunctionForm> = ({
   functionAbi,
   structs,
   callbackFn,
+  response,
   // enums,
 }) => {
   // Check if functionAbi is correct with yup validation schema
@@ -402,7 +410,6 @@ const FunctionForm: React.FC<IFunctionForm> = ({
 
   // Persistent State on Jotai
   const [formStates, setFormsState] = useAtom(formsAtom);
-
   const oldFormStates = formStates[functionAbi.name];
 
   // console.log(functionAbi?.name, { oldFormStates });
@@ -414,14 +421,21 @@ const FunctionForm: React.FC<IFunctionForm> = ({
     validationSchema: Yup.object(validationSchema),
     onSubmit: (finalValues) => {
       try {
+        const rawArrayValues = flattenToRawCallData(finalValues);
         const starkliValues = transformStringArrayToInteger(
-          flattenArrays(flattenToRawCallData(finalValues)) as string[]
+          flattenArrays(rawArrayValues) as string[]
+        );
+
+        const starknetValues = Object.keys(finalValues).map(
+          // @ts-ignore
+          (key) => finalValues[key]
         );
 
         const callbackReturnValues: CallbackReturnType = {
           raw: finalValues,
           functionName: functionAbi?.name,
           stateMutability: functionAbi?.state_mutability,
+          starknetjs: starknetValues,
           starkli: {
             bigint: starkliValues,
             decimal: starkliValues.map((v) => v.toString(10)).join(' '),
@@ -509,6 +523,7 @@ const FunctionForm: React.FC<IFunctionForm> = ({
           Call
         </Button>
       </form>
+      <div className="my-2">{response}</div>
     </div>
   );
 };
