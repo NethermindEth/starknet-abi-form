@@ -26,11 +26,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
         with:
           node-version: lts/*
-          registry-url: https://registry.npmjs.org/
-      - run: pnpm
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: npm publish --access public
         env:
