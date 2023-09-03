@@ -39,7 +39,7 @@ export const ABIForm: React.FC<ABIFormProps> = ({
     abiSchema.validateSync(abi);
   } catch (e) {
     console.error(e);
-    return <p>Not a Valid ABI Schema</p>;
+    return <p>Not a Valid ABI Schema Cairo v2</p>;
   }
 
   // If abi validated successfully then it's a valid abi as per spec.
