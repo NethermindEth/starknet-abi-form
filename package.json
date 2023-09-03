@@ -18,7 +18,7 @@
     "dev": "concurrently \"pnpm build --watch\" \"pnpm storybook\" \"pnpm test\" ",
     "build": "tsup --onSuccess \"pnpm link:self\"",
     "type-check": "tsc",
-    "lint": "eslint --ignore-path .gitignore example \"{src,tests}/**/*.+(ts|js|tsx)\"",
+    "lint": "eslint --ignore-path .gitignore \"{src,tests}/**/*.+(ts|js|tsx)\"",
     "lint:fix": "pnpm lint --fix && prettier --write .",
     "test": "vitest",
     "test:ci": "vitest run --coverage",
