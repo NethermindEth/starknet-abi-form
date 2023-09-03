@@ -27,6 +27,7 @@ module.exports = {
     'prefer-arrow',
     'sort-class-members',
   ],
+  ignorePatterns: ['example'],
   rules: {
     '@typescript-eslint/no-unused-vars': 'error',
     'import/extensions': 'off',
