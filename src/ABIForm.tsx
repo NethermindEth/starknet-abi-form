@@ -39,7 +39,7 @@ export const ABIForm: React.FC<ABIFormProps> = ({
     abiSchema.validateSync(abi);
   } catch (e) {
     console.error(e);
-    return <p>Not a Valid ABI Schema Cairo v2</p>;
+    return <p className="invalid-abi">Not a Valid ABI Schema Cairo v2</p>;
   }
 
   // If abi validated successfully then it's a valid abi as per spec.
@@ -77,13 +77,13 @@ export const ABIForm: React.FC<ABIFormProps> = ({
   const [activeTab, setActiveTab] = useState<'read' | 'write'>('write');
 
   return (
-    <Root value={activeTab}>
-      <List className="text-sm font-medium text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+    <Root value={activeTab} className="tab-root">
+      <List className="text-sm font-medium text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 tab-triggers-wrapper">
         <Trigger
           value="read"
-          className={
+          className={`${
             activeTab === 'read' ? ActiveTabClasses : DefaultTabClasses
-          }
+          } tab-trigger`}
           onClick={() => {
             setActiveTab('read');
           }}
@@ -92,9 +92,9 @@ export const ABIForm: React.FC<ABIFormProps> = ({
         </Trigger>
         <Trigger
           value="write"
-          className={
+          className={`${
             activeTab === 'write' ? ActiveTabClasses : DefaultTabClasses
-          }
+          } tab-trigger`}
           onClick={() => {
             setActiveTab('write');
           }}
@@ -102,7 +102,7 @@ export const ABIForm: React.FC<ABIFormProps> = ({
           Write
         </Trigger>
       </List>
-      <Content value="read">
+      <Content value="read" className="tab-content">
         {viewFunctions.map((viewFn) => (
           <FunctionForm
             key={`viewFn-${viewFn.name}`}
@@ -114,7 +114,7 @@ export const ABIForm: React.FC<ABIFormProps> = ({
           />
         ))}
       </Content>
-      <Content value="write">
+      <Content value="write" className="tab-content">
         {externalFunctions.map((externalFn) => (
           <FunctionForm
             key={`externalFn-${externalFn.name}`}

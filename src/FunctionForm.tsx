@@ -122,17 +122,18 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
 
         return (
           <div
-            className="my-2 w-full px-2 py-1 border-gray-200 border-2 rounded"
+            className="my-2 w-full px-2 py-1 border-gray-200 border-2 rounded function-form-input-wrapper"
             key={fullPath?.join('|')}
           >
             <label
               htmlFor={`${name ? `${name}.` : ''}${key}`}
-              className="block mb-2 text-sm font-medium"
+              className="block mb-2 text-sm font-medium input-label"
             >
               {`${name ? `${name}.` : ''}${key}`}
               <Tag
                 style={{ marginLeft: '1rem' }}
                 tag={typeToTagColor(abiTypeInfo)}
+                className="input-tag"
               >
                 {abiTypeInfo}
               </Tag>
@@ -143,7 +144,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
               name={`${name ? `${name}.` : ''}${key}`}
               placeholder={`${name ? `${name}.` : ''}${key}`}
               value={currentValueObject}
-              className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
+              className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 function-form-input"
               onChange={handleChange}
             />
             <p className="input-error">{error}</p>
@@ -157,10 +158,12 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
         const lParentKeys = parentKeys ? [...parentKeys, key] : [key];
         return (
           <div
-            className="w-full flex flex-col shadow-md shadow-green-500 rounded p-2 my-2 bg-green-50"
+            className="w-full flex flex-col shadow-md shadow-green-500 rounded p-2 my-2 bg-green-50 function-struct"
             key={lParentKeys.join('|')}
           >
-            <p className="text-xl font-bold">struct: {key}</p>
+            <p className="text-xl font-bold function-struct-header">
+              struct: {key}
+            </p>
             <ParseInputFieldsFromObject
               values={{ ...currentValueObject }}
               errors={errors}
@@ -208,7 +211,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
           <AccordionRoot
             type="multiple"
             key={`accordion-root|${pathKeys.join('|')}`}
-            className="w-full shadow-sm shadow-purple-500 p-2 rounded bg-purple-50"
+            className="w-full shadow-sm shadow-purple-500 p-2 rounded bg-purple-50 function-array-root"
             value={accordianTabsState}
             onValueChange={(value) => {
               const diff = loadashFp.difference(accordianTabsState, value);
@@ -222,13 +225,14 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
               setAccordianTabsState([...accordianTabsState, ...value]);
             }}
           >
-            <div className="flex justify-between items-center">
-              <h5 className="text-xl">Array: {key}</h5>
+            <div className="flex justify-between items-center function-array-header">
+              <h5 className="text-xl array-title">Array: {key}</h5>
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
                   handleArrayPush(pathKeys, initalObj);
                 }}
+                className="array-add"
               >
                 ADD +
               </Button>
@@ -281,11 +285,11 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
 
                 return (
                   <div
-                    className="w-full flex flex-col items-end shadow-md shadow-green-500 rounded p-2 bg-green-50 my-2"
+                    className="w-full flex flex-col items-end shadow-md shadow-green-500 rounded p-2 bg-green-50 my-2 array-core-item"
                     key={fullPath.join('|')}
                   >
                     <Button
-                      className="w-max"
+                      className="w-max array-core-item-delete"
                       color="red"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -294,15 +298,16 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
                     >
                       DELETE
                     </Button>
-                    <div className="my-2 w-full px-2 py-1 border-gray-200 border-2 rounded">
+                    <div className="my-2 w-full px-2 py-1 border-gray-200 border-2 rounded function-form-input-wrapper">
                       <label
                         htmlFor={`${name}`}
-                        className="block mb-2 text-sm font-medium"
+                        className="block mb-2 text-sm font-medium input-label"
                       >
                         {`${name}`}{' '}
                         <Tag
                           style={{ marginLeft: '1rem' }}
                           tag={typeToTagColor(coreArrAbiTypeInfo)}
+                          className="input-tag"
                         >
                           {coreArrAbiTypeInfo}
                         </Tag>{' '}
@@ -313,7 +318,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
                         id={`${name}`}
                         value={obj}
                         placeholder={`${name}`}
-                        className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 "
+                        className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 function-form-input"
                         onChange={handleChange}
                       />
                       <p className="input-error">{error}</p>
@@ -325,16 +330,16 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
               return (
                 <AccordionItem
                   value={lParentKeys.join('|')}
-                  className="w-full flex flex-col shadow-md shadow-green-500 rounded p-2 bg-green-50 my-2"
+                  className="w-full flex flex-col shadow-md shadow-green-500 rounded p-2 bg-green-50 my-2 array-complex-item"
                   key={lParentKeys.join('|')}
                 >
-                  <AccordionTrigger className="w-full hover:shadow-md hover:bg-slate-50 rounded">
+                  <AccordionTrigger className="w-full hover:shadow-md hover:bg-slate-50 rounded array-complex-item-trigger">
                     <div className="flex justify-between items-center w-full px-2">
-                      <p className="text-xl font-bold">
+                      <p className="text-xl font-bold array-complex-item-header">
                         {index + 1}. struct: {key}
                       </p>
                       <div
-                        className={ButtonColorsClasses.red}
+                        className={`${ButtonColorsClasses.red} array-complex-item-delete`}
                         role="button"
                         tabIndex={0}
                         onClick={(e) => {
@@ -350,7 +355,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
                       </div>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent>
+                  <AccordionContent className="array-complex-item-content">
                     <ParseInputFieldsFromObject
                       values={{ ...obj }}
                       errors={errors}
@@ -371,7 +376,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
       return '';
     });
   }
-  return <p>Could not parse type!!</p>;
+  return <p className="failed-parse-type">Could not parse type!!</p>;
 };
 
 type IFunctionForm = {
@@ -394,7 +399,7 @@ const FunctionForm: React.FC<IFunctionForm> = ({
     yupAbiFunctionSchema.validateSync(functionAbi);
   } catch (e) {
     console.error(e);
-    return <p>Not a valid function ABI</p>;
+    return <p className="invalid-abi">Not a valid function ABI</p>;
   }
 
   const initialValuesMap = reduceFunctionInputs(functionAbi?.inputs, structs);
@@ -493,8 +498,8 @@ const FunctionForm: React.FC<IFunctionForm> = ({
   };
 
   return (
-    <div className="bg-slate-100 p-3 rounded my-2 shadow-md">
-      <div className="flex items-center">
+    <div className="bg-slate-100 p-3 rounded my-2 shadow-md function-root">
+      <div className="flex items-center function-header">
         <p className="mr-2 text-md font-bold text-black  ">
           {functionAbi?.name}
         </p>
@@ -509,7 +514,7 @@ const FunctionForm: React.FC<IFunctionForm> = ({
         ))}
         )
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="function-form">
         <ParseInputFieldsFromObject
           values={values}
           errors={errors}
@@ -519,11 +524,15 @@ const FunctionForm: React.FC<IFunctionForm> = ({
           handleArrayPush={handleArrayPush}
           handleArrayPop={handleArrayPop}
         />
-        <Button type="submit" color="purple" className="my-2">
+        <Button
+          type="submit"
+          color="purple"
+          className="my-2 function-form-submit"
+        >
           Call
         </Button>
       </form>
-      <div className="my-2">{response}</div>
+      <div className="my-2 function-response">{response}</div>
     </div>
   );
 };
