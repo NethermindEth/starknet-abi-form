@@ -9,9 +9,12 @@ This package helps you render the forms via abi, and have input validations buil
   - Sample usage you can checkout at [/example/react-app/starknet-abi-form-driver](./example/react-app/starknet-abi-form-driver/src/App.tsx)
 - To Import form styles
   - `import "starknet-react-abi-ui/index.css";` from your usage.
+  - You can add your styling with as below by overriding css from a new css file.
 - Checkout sample react project at [/example/react-app/starknet-abi-form-driver](./example/react-app/starknet-abi-form-driver/)
 
 # Overriding CSS
+
+- You can override styling by using below classes with different parts of the package
 
 ### Tabs
 
@@ -50,6 +53,28 @@ This package helps you render the forms via abi, and have input validations buil
 
 - `invalid-abi` text when an abi is not valid
 - `failed-parse-type` text when a type can't be parsed
+
+### Tags
+
+- `tag-blue` Tag default styling of blue
+- `tag-gray` Tag default styling of gray
+- `tag-green` Tag default styling of green
+- `tag-indigo` Tag default styling of indigo
+- `tag-pink` Tag default styling of pink
+- `tag-purple` Tag default styling of purple
+- `tag-red` Tag default styling of red
+- `tag-yellow` Tag default styling of yellow
+
+### Buttons
+
+- `btn-blue` Button with default blue styling
+- `btn-green` Button with default green styling
+- `btn-cyan` Button with default cyan styling
+- `btn-teal` Button with default teal styling
+- `btn-lime` Button with default lime styling
+- `btn-red` Button with default red styling
+- `btn-pink` Button with default pink styling
+- `btn-purple` Button with default purple styling
 
 # Building Locally
 
