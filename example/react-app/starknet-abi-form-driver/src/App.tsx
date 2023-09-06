@@ -2,7 +2,8 @@ import { useBlock, useContract, useNetwork } from '@starknet-react/core';
 import WalletBar from './components/WalletBar';
 import { useStarknet } from '@starknet-react/core/dist/providers';
 import { ABIForm, CallbackReturnType } from 'starknet-react-abi-ui';
-import "starknet-react-abi-ui/index.css"
+import 'starknet-react-abi-ui/index.css';
+// import './custom.css';
 import { useEffect, useState } from 'react';
 import { Abi } from 'starknet';
 
@@ -11,7 +12,7 @@ function App() {
     refetchInterval: 3000,
   });
 
-  const [abi, setAbi] = useState<Abi>([]);
+  const [abi, setAbi] = useState<Abi | undefined>(undefined);
   const [addressContract, setAddressContract] = useState('');
 
   const [responses, setResponses] = useState<Record<string, React.ReactNode>>(
@@ -42,7 +43,15 @@ function App() {
       contract?.call(value?.functionName, value?.starknetjs).then((res) => {
         setResponses({
           ...responses,
-          [value?.functionName]: <div>{JSON.stringify(res)}</div>,
+          [value?.functionName]: (
+            <div>
+              {JSON.stringify(
+                res,
+                (key, value) =>
+                  typeof value === 'bigint' ? `0x${value.toString(16)}` : value // return everything else unchanged
+              )}
+            </div>
+          ),
         });
         console.log(res);
       });
@@ -52,7 +61,15 @@ function App() {
       contract?.invoke(value.functionName, value?.starknetjs).then((res) => {
         setResponses({
           ...responses,
-          [value?.functionName]: <div>{JSON.stringify(res)}</div>,
+          [value?.functionName]: (
+            <div>
+              {JSON.stringify(
+                res,
+                (key, value) =>
+                  typeof value === 'bigint' ? `0x${value.toString(16)}` : value // return everything else unchanged
+              )}
+            </div>
+          ),
         });
         console.log(res);
       });
@@ -81,7 +98,7 @@ function App() {
           : `Latest block hash: ${data?.block_hash}`}
       </div>
       <span>{chain && chain.name}</span>
-      <h4>Using Conrtact {contract?.address}</h4>
+      {/* <h4>Using Conrtact {contract?.address}</h4> */}
       <WalletBar />
       <ABIForm abi={abi} callBackFn={handleCall} responses={responses} />
     </main>
