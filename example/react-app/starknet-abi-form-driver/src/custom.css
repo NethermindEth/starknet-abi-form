@@ -1,0 +1,112 @@
+
+
+/* Tabs */
+.tab-root {
+    background-color: #ccc;
+    font-family: "Courier New", Courier, monospace;
+  }
+  
+  .tab-triggers-wrapper {
+    background-color: rebeccapurple;
+  }
+  
+  .tab-trigger {
+    background-color: #f2f2f2;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px 15px;
+    text-align: left;
+    transition: background-color 0.3s;
+  }
+  
+  .tab-content {
+  }
+  
+  /* Functions */
+  .function-root {
+    background-color: #8561c5;
+    color: white;
+  }
+  .function-header {
+    background-color: rebeccapurple;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+  }
+  .function-header p,
+  span {
+    color: white;
+  }
+  
+  .function-response {
+      background-color: transparent;
+  }
+  
+  .function-form {
+  }
+  .function-form-submit {
+      background-image: none;
+      background-color: #FF6B6B;
+  }
+  
+  .function-form-submit:hover {
+      background-image: none;
+      background-color: #FFABAB;
+  }
+  
+  .function-form-input-wrapper {
+      background-color: #7a52b6;
+  }
+  .input-label {
+      color: white;
+  }
+  .input-tag {
+      background-color: #008080;
+      padding: 0.2rem;
+      border-radius: 0.2rem;
+  }
+  .input-error {
+    color: coral;
+  }
+  .function-form-input {
+      background-color: transparent;
+      color: white;
+  }
+  .function-struct {
+    background-color: #e6e6fa;
+    border: 1px solid #FF4040;
+    color: darkblue;
+    box-shadow: none;
+  }
+  .function-struct-header {
+  }
+  .function-array-root {
+  }
+  .function-array-header {
+  }
+  .array-title {
+  }
+  .array-add {
+  }
+  .array-core-item {
+  }
+  .array-core-item-delete {
+  }
+  .array-complex-item {
+  }
+  .array-complex-item-trigger {
+  }
+  .array-complex-item-delete {
+  }
+  .array-complex-item-header {
+  }
+  .array-complex-item-content {
+  }
+  
+  /* Others */
+  .invalid-abi {
+  }
+  .failed-parse-type {
+  }
+  
