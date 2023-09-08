@@ -11,6 +11,7 @@ import {
 import FunctionForm from './FunctionForm';
 import { Content, List, Root, Trigger } from './UIComponents/Tabs/Tabs';
 import { ActiveTabClasses, DefaultTabClasses } from './utils/tailwindClasses';
+import { Provider } from './UIComponents/Tooltip/Tooltip';
 
 export type CallbackReturnType = {
   functionName: string;
@@ -77,55 +78,57 @@ export const ABIForm: React.FC<ABIFormProps> = ({
   const [activeTab, setActiveTab] = useState<'read' | 'write'>('write');
 
   return (
-    <Root value={activeTab} className="tab-root">
-      <List className="text-sm font-medium text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 tab-triggers-wrapper">
-        <Trigger
-          value="read"
-          className={`${
-            activeTab === 'read' ? ActiveTabClasses : DefaultTabClasses
-          } tab-trigger`}
-          onClick={() => {
-            setActiveTab('read');
-          }}
-        >
-          Read
-        </Trigger>
-        <Trigger
-          value="write"
-          className={`${
-            activeTab === 'write' ? ActiveTabClasses : DefaultTabClasses
-          } tab-trigger`}
-          onClick={() => {
-            setActiveTab('write');
-          }}
-        >
-          Write
-        </Trigger>
-      </List>
-      <Content value="read" className="tab-content">
-        {viewFunctions.map((viewFn) => (
-          <FunctionForm
-            key={`viewFn-${viewFn.name}`}
-            functionAbi={viewFn}
-            structs={structs}
-            callbackFn={callBackFn}
-            response={responses && responses[viewFn?.name]}
-            // enums={enums}
-          />
-        ))}
-      </Content>
-      <Content value="write" className="tab-content">
-        {externalFunctions.map((externalFn) => (
-          <FunctionForm
-            key={`externalFn-${externalFn.name}`}
-            functionAbi={externalFn}
-            structs={structs}
-            callbackFn={callBackFn}
-            response={responses && responses[externalFn?.name]}
-            // enums={enums}
-          />
-        ))}
-      </Content>
-    </Root>
+    <Provider>
+      <Root value={activeTab} className="tab-root">
+        <List className="text-sm font-medium text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 tab-triggers-wrapper">
+          <Trigger
+            value="read"
+            className={`${
+              activeTab === 'read' ? ActiveTabClasses : DefaultTabClasses
+            } tab-trigger`}
+            onClick={() => {
+              setActiveTab('read');
+            }}
+          >
+            Read
+          </Trigger>
+          <Trigger
+            value="write"
+            className={`${
+              activeTab === 'write' ? ActiveTabClasses : DefaultTabClasses
+            } tab-trigger`}
+            onClick={() => {
+              setActiveTab('write');
+            }}
+          >
+            Write
+          </Trigger>
+        </List>
+        <Content value="read" className="tab-content">
+          {viewFunctions.map((viewFn) => (
+            <FunctionForm
+              key={`viewFn-${viewFn.name}`}
+              functionAbi={viewFn}
+              structs={structs}
+              callbackFn={callBackFn}
+              response={responses && responses[viewFn?.name]}
+              // enums={enums}
+            />
+          ))}
+        </Content>
+        <Content value="write" className="tab-content">
+          {externalFunctions.map((externalFn) => (
+            <FunctionForm
+              key={`externalFn-${externalFn.name}`}
+              functionAbi={externalFn}
+              structs={structs}
+              callbackFn={callBackFn}
+              response={responses && responses[externalFn?.name]}
+              // enums={enums}
+            />
+          ))}
+        </Content>
+      </Root>
+    </Provider>
   );
 };

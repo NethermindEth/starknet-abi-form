@@ -21,8 +21,41 @@ export const isACoreType = (type: string): boolean => {
   return false;
 };
 
+function isStringButNotDecimalOrHex(value: string) {
+  // Check if the value is a string
+  if (typeof value === 'string') {
+    // Use a regular expression to check if it's not a decimal or hex
+    if (!/^(?!0x[\da-fA-F]+$)(?!\d+(\.\d+)?$)/.test(value)) {
+      return true; // It's a string, but not a decimal or hex
+    }
+  }
+  return false; // It's not a string, or it's a decimal or hex
+}
+
+function stringToUTF8Hex(inputString: string) {
+  // Return empty string in case no string is input to the function params
+  if (!inputString) return [];
+
+  const utf8Hex = [];
+
+  for (let i = 0; i < inputString.length; i++) {
+    const charCode = inputString.charCodeAt(i);
+    utf8Hex.push(charCode.toString(16));
+  }
+
+  return utf8Hex;
+}
+
+export function finalTransformedValue(value: string) {
+  if (!isStringButNotDecimalOrHex(value)) {
+    if (value.length === 0) return '';
+    return `0x${stringToUTF8Hex(value).join('')}`;
+  }
+  return value;
+}
+
 function validateCoreType(type: string, val: string): boolean {
-  const value = BigNumber(val);
+  const value = BigNumber(finalTransformedValue(val));
   switch (type) {
     case 'core::bool':
       return value.lte(1);

@@ -35,6 +35,8 @@ This package helps you render the forms via abi, and have input validations buil
 - `input-tag` Tab for type of that input's class
 - `input-error` Error mentioning class
 - `function-form-input` Input for the form class
+- `tooltip-input-final-value` The final value which will goto the contract call/invoke
+- `tooltip-input-text-hint` Hint tooltip value for input final value
 - `function-struct` Wrapper for a struct
 - `function-struct-header` Header with struct name inside the wrapper
 - `function-array-root` Main wrapper for an array type
