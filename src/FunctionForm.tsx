@@ -22,12 +22,15 @@ import {
 import { Button, ButtonColorsClasses } from './UIComponents/Button/Button';
 import Tag, { TagColors } from './UIComponents/Tag/Tag';
 import {
+  finalizeValues,
   flattenArrays,
   flattenToRawCallData,
   transformStringArrayToInteger,
 } from './types/helper';
 import { CallbackReturnType } from './ABIForm';
 import { formsAtom } from './atoms';
+import { finalTransformedValue } from './types/dataTypes';
+import { Content, Portal, Root, Trigger } from './UIComponents/Tooltip/Tooltip';
 
 const typeToTagColor = (name: string): TagColors => {
   try {
@@ -147,6 +150,20 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
               className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 function-form-input"
               onChange={handleChange}
             />
+            <Root>
+              <Trigger>
+                <p className="tooltip-input-final-value">
+                  {finalTransformedValue(currentValueObject)}
+                </p>
+              </Trigger>
+              <Portal>
+                <Content>
+                  <p className="tooltip-input-text-hint">
+                    Finalized Value which will go for to contract
+                  </p>
+                </Content>
+              </Portal>
+            </Root>
             <p className="input-error">{error}</p>
           </div>
         );
@@ -426,14 +443,15 @@ const FunctionForm: React.FC<IFunctionForm> = ({
     validationSchema: Yup.object(validationSchema),
     onSubmit: (finalValues) => {
       try {
-        const rawArrayValues = flattenToRawCallData(finalValues);
+        const finalizedValues = finalizeValues(finalValues);
+        const rawArrayValues = flattenToRawCallData(finalizedValues);
         const starkliValues = transformStringArrayToInteger(
           flattenArrays(rawArrayValues) as string[]
         );
 
-        const starknetValues = Object.keys(finalValues).map(
+        const starknetValues = Object.keys(finalizedValues).map(
           // @ts-ignore
-          (key) => finalValues[key]
+          (key) => finalizedValues[key]
         );
 
         const callbackReturnValues: CallbackReturnType = {

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { ABI, ABIFunction, ABIStruct, ABIEnum } from '.';
+import { finalTransformedValue } from './dataTypes';
 
 export function extractFunctionFromRawAbi(abi: ABI, functions: ABIFunction[]) {
   // Considering any here because it can be any of types.
@@ -119,6 +120,33 @@ export const transformStringArrayToInteger = (value: string[]): bigint[] =>
     }
     return lValue;
   });
+
+export function finalizeValues(value: any): any {
+  if (typeof value === 'string') {
+    return finalTransformedValue(value);
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((val) => {
+      if (typeof val === 'string') {
+        return finalTransformedValue(val);
+      }
+      return finalizeValues(val);
+    });
+  }
+
+  if (typeof value === 'object') {
+    return Object.keys(value).reduce((prev, key) => {
+      const curr = value[key];
+      const currFVal = finalizeValues(curr);
+      return {
+        ...prev,
+        [key]: currFVal,
+      };
+    }, {});
+  }
+  return value;
+}
 
 export function flattenToRawCallData(value: any): any {
   if (typeof value === 'string') {
