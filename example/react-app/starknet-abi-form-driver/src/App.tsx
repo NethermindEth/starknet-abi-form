@@ -1,8 +1,8 @@
 import { useBlock, useContract, useNetwork } from '@starknet-react/core';
 import WalletBar from './components/WalletBar';
 import { useStarknet } from '@starknet-react/core/dist/providers';
-import { ABIForm, CallbackReturnType } from 'starknet-react-abi-ui';
-import 'starknet-react-abi-ui/index.css';
+import { ABIForm, CallbackReturnType } from 'starknet-abi-forms';
+import 'starknet-abi-forms/index.css';
 // import './custom.css';
 import { useEffect, useState } from 'react';
 import { Abi } from 'starknet';

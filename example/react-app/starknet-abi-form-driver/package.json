@@ -12,8 +12,8 @@
     "@starknet-react/core": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "starknet": "^5.14.1",
-    "starknet-react-abi-ui": "^0.1.0"
+    "starknet": "^5.19.5",
+    "starknet-abi-forms": "^0.1.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",
