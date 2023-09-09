@@ -1,5 +1,5 @@
 {
-  "name": "starknet-react-abi-ui",
+  "name": "starknet-abi-forms",
   "description": "A Starknet ABI Form Parser, with type Validations for Starknet Contracts and making integration faster with Starknet.",
   "version": "0.1.2",
   "author": "Prince Anuragi <prince.anuragi@nethermind.io>",
