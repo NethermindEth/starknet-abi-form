@@ -4,13 +4,13 @@ This package helps you render the forms via abi, and have input validations buil
 
 # Usage in You Dapp
 
-- `npm install starknet-react-abi-ui`
+- `npm install starknet-abi-forms`
 - In your Dapp Import the `ABIForm` and use it.
-  - Sample usage you can checkout at [/example/react-app/starknet-abi-form-driver](./example/react-app/starknet-abi-form-driver/src/App.tsx)
+  - Sample usage you can checkout at [/example/react-app/starknet-abi-form-driver](https://github.com/NethermindEth/starknet-abi-form/tree/dev/example/react-app/starknet-abi-form-driver/src/App.tsx)
 - To Import form styles
-  - `import "starknet-react-abi-ui/index.css";` from your usage.
+  - `import "starknet-abi-forms/index.css";` from your usage.
   - You can add your styling with as below by overriding css from a new css file.
-- Checkout sample react project at [/example/react-app/starknet-abi-form-driver](./example/react-app/starknet-abi-form-driver/)
+- Checkout sample react project at [/example/react-app/starknet-abi-form-driver](https://github.com/NethermindEth/starknet-abi-form/tree/dev/example/react-app/starknet-abi-form-driver/)
 
 # Overriding CSS
 
