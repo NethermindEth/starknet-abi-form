@@ -1,0 +1,94 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`renders correctly 1`] = `
+<div
+  className="tab-root"
+  data-orientation="horizontal"
+  dir="ltr"
+>
+  <div
+    aria-orientation="horizontal"
+    className="text-sm font-medium text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 tab-triggers-wrapper"
+    data-orientation="horizontal"
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseDown={[Function]}
+    role="tablist"
+    style={
+      {
+        "outline": "none",
+      }
+    }
+    tabIndex={0}
+  >
+    <button
+      aria-controls="radix-:r0:-content-read"
+      aria-selected={true}
+      className="inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 tab-trigger"
+      data-orientation="horizontal"
+      data-radix-collection-item=""
+      data-state="active"
+      disabled={false}
+      id="radix-:r0:-trigger-read"
+      onClick={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onMouseDown={[Function]}
+      role="tab"
+      tabIndex={-1}
+      type="button"
+    >
+      Read
+    </button>
+    <button
+      aria-controls="radix-:r0:-content-write"
+      aria-selected={false}
+      className="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 tab-trigger"
+      data-orientation="horizontal"
+      data-radix-collection-item=""
+      data-state="inactive"
+      disabled={false}
+      id="radix-:r0:-trigger-write"
+      onClick={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onMouseDown={[Function]}
+      role="tab"
+      tabIndex={-1}
+      type="button"
+    >
+      Write
+    </button>
+  </div>
+  <div
+    aria-labelledby="radix-:r0:-trigger-read"
+    className="tab-content"
+    data-orientation="horizontal"
+    data-state="active"
+    hidden={false}
+    id="radix-:r0:-content-read"
+    role="tabpanel"
+    style={
+      {
+        "animationDuration": "0s",
+      }
+    }
+    tabIndex={0}
+  />
+  <div
+    aria-labelledby="radix-:r0:-trigger-write"
+    className="tab-content"
+    data-orientation="horizontal"
+    data-state="inactive"
+    hidden={true}
+    id="radix-:r0:-content-write"
+    role="tabpanel"
+    style={
+      {
+        "animationDuration": undefined,
+      }
+    }
+    tabIndex={0}
+  />
+</div>
+`;

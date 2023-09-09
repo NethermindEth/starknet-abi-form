@@ -30,7 +30,7 @@ const Tag: React.FC<{ tag?: TagColors } & React.HTMLProps<HTMLSpanElement>> = ({
   children,
   ...props
 }) => (
-  <span className={BadgeClasses[tag] ?? ''} {...props}>
+  <span {...props} className={`${BadgeClasses[tag] ?? ''} ${props.className}`}>
     {children}
   </span>
 );

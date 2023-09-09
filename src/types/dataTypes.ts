@@ -1,5 +1,8 @@
-import { BigNumber } from 'bignumber.js';
 import * as Yup from 'yup';
+
+export const ZERO = 0n;
+export const MASK_250 = 2n ** 250n - 1n; // 2 ** 250 - 1
+export const MASK_251 = 2n ** 251n;
 
 export const CoreTypes = [
   'core::felt252',
@@ -9,8 +12,8 @@ export const CoreTypes = [
   'core::integer::u32',
   'core::integer::u64',
   'core::integer::u128',
-  //   'core::integer::u256',
   'core::starknet::contract_address::ContractAddress',
+  'core::starknet::class_hash::ClassHash',
 ];
 
 export const isACoreType = (type: string): boolean => {
@@ -21,18 +24,16 @@ export const isACoreType = (type: string): boolean => {
   return false;
 };
 
-function isStringButNotDecimalOrHex(value: string) {
-  // Check if the value is a string
+export function isStringButNotDecimalOrHex(value: string) {
   if (typeof value === 'string') {
-    // Use a regular expression to check if it's not a decimal or hex
     if (!/^(?!0x[\da-fA-F]+$)(?!\d+(\.\d+)?$)/.test(value)) {
-      return true; // It's a string, but not a decimal or hex
+      return true;
     }
   }
-  return false; // It's not a string, or it's a decimal or hex
+  return false;
 }
 
-function stringToUTF8Hex(inputString: string) {
+export function stringToUTF8Hex(inputString: string) {
   // Return empty string in case no string is input to the function params
   if (!inputString) return [];
 
@@ -47,35 +48,35 @@ function stringToUTF8Hex(inputString: string) {
 }
 
 export function finalTransformedValue(value: string) {
-  if (!isStringButNotDecimalOrHex(value)) {
+  if (!isStringButNotDecimalOrHex(value) && typeof value === 'string') {
     if (value.length === 0) return '';
     return `0x${stringToUTF8Hex(value).join('')}`;
   }
   return value;
 }
 
-function validateCoreType(type: string, val: string): boolean {
-  const value = BigNumber(finalTransformedValue(val));
+export function validateCoreType(type: string, val: string): boolean {
+  const value = BigInt(finalTransformedValue(val));
+  if (value < 0n) return false;
   switch (type) {
     case 'core::bool':
-      return value.lte(1);
+      return value <= 1;
     case 'core::integer::u8':
-      return value.lte(2 ** 8 - 1);
+      return value <= 2n ** 8n - 1n;
     case 'core::integer::u16':
-      return value.lte(2 ** 16 - 1);
+      return value <= 2n ** 16n - 1n;
     case 'core::integer::u32':
-      return value.lte(2 ** 32 - 1);
+      return value <= 2n ** 32n - 1n;
     case 'core::integer::u64':
-      return value.lte(2 ** 64 - 1);
+      return value <= 2n ** 64n - 1n;
     case 'core::integer::u128':
-      return value.lte('340282366920938463463374607431768211455');
+      return value <= 2n ** 128n - 1n;
     case 'core::felt252':
-      return value.lte(
-        '3618502788666131213697322783095070105623107215331596699973092056135872020480'
-      );
+      return value <= MASK_251;
+    case 'core::starknet::class_hash::ClassHash':
     case 'core::starknet::contract_address::ContractAddress':
-      // TODO: Add Proper Validation for address here.
-      return true;
+      // Contract Address must be less then felt252 range.
+      return value <= MASK_251;
     default:
       return false;
   }
