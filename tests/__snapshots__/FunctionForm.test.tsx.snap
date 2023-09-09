@@ -1,0 +1,113 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`renders correctly 1`] = `
+<div
+  className="bg-slate-100 p-3 rounded my-2 shadow-md function-root"
+>
+  <div
+    className="flex items-center function-header"
+  >
+    <p
+      className="mr-2 text-md font-bold text-black  "
+    >
+      user_input
+    </p>
+    (
+    <span
+      className="mr-2 text-sm font-normal dark:text-gray-400"
+    >
+      state
+      :
+    </span>
+    <span
+      className="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 tag-blue undefined"
+      color="blue"
+    >
+      core::array::Array::&lt;core::integer::u128&gt;
+    </span>
+    )
+  </div>
+  <form
+    className="function-form"
+    onSubmit={[Function]}
+  >
+    <div
+      className="w-full shadow-sm shadow-purple-500 p-2 rounded bg-purple-50 function-array-root"
+      data-orientation="vertical"
+      onKeyDown={[Function]}
+    >
+      <div
+        className="flex justify-between items-center function-array-header"
+      >
+        <h5
+          className="text-xl array-title"
+        >
+          Array: 
+          state
+        </h5>
+        <button
+          className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center btn-blue array-add"
+          onClick={[Function]}
+          type="button"
+        >
+          ADD +
+        </button>
+      </div>
+      <div
+        className="w-full flex flex-col items-end shadow-md shadow-green-500 rounded p-2 bg-green-50 my-2 array-core-item"
+      >
+        <button
+          className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center btn-red w-max array-core-item-delete"
+          onClick={[Function]}
+          type="button"
+        >
+          DELETE
+        </button>
+        <div
+          className="my-2 w-full px-2 py-1 border-gray-200 border-2 rounded function-form-input-wrapper"
+        >
+          <label
+            className="block mb-2 text-sm font-medium input-label"
+            htmlFor="state[0]"
+          >
+            state[0]
+             
+            <span
+              className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 tag-green input-tag"
+              style={
+                {
+                  "marginLeft": "1rem",
+                }
+              }
+            >
+              core::integer::u128
+            </span>
+             
+          </label>
+          <input
+            className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 function-form-input"
+            id="state[0]"
+            name="state[0]"
+            onChange={[Function]}
+            placeholder="state[0]"
+            type="text"
+            value=""
+          />
+          <p
+            className="input-error"
+          />
+        </div>
+      </div>
+    </div>
+    <button
+      className="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center btn-purple my-2 function-form-submit"
+      type="submit"
+    >
+      Call
+    </button>
+  </form>
+  <div
+    className="my-2 function-response"
+  />
+</div>
+`;

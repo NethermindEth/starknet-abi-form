@@ -75,7 +75,7 @@ export const ABIForm: React.FC<ABIFormProps> = ({
   //   }
   // }, [abi]);
 
-  const [activeTab, setActiveTab] = useState<'read' | 'write'>('write');
+  const [activeTab, setActiveTab] = useState<'read' | 'write'>('read');
 
   return (
     <Provider>
