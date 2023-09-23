@@ -16,13 +16,24 @@ export const CoreTypes = [
   'core::starknet::class_hash::ClassHash',
 ];
 
+export const CoreEnums = [
+  'core::option::Option',
+  'core::result::Result'
+]
+
 export const isACoreType = (type: string): boolean => {
   if (type && typeof type === 'string') {
     return CoreTypes.includes(type);
   }
-
   return false;
 };
+
+export const isACoreEnum = (type: string): boolean => {
+  if (type && typeof type === 'string') {
+    return CoreEnums.includes(type);
+  }
+  return false;
+}
 
 export function isStringButNotDecimalOrHex(value: string) {
   if (typeof value === 'string') {
@@ -87,7 +98,7 @@ export function validateCoreType(type: string, val: string): boolean {
 Yup.addMethod(Yup.string, 'validate_core_type', function (type: string) {
   return this.test('check inputs', type, function (val) {
     const { createError } = this;
-    if (val !== undefined) {
+    if (val !== undefined && val?.length > 0) {
       try {
         const isValid = validateCoreType(type, val);
         if (!isValid) {
@@ -102,6 +113,7 @@ Yup.addMethod(Yup.string, 'validate_core_type', function (type: string) {
         return createError(new Yup.ValidationError(e?.message || e));
       }
     }
-    return createError(new Yup.ValidationError('value is required'));
+    // return createError(new Yup.ValidationError('value is required'));
+    return true;
   });
 });

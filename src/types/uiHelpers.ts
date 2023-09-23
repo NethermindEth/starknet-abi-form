@@ -1,7 +1,13 @@
 import * as Yup from 'yup';
-import { ABIFunctionInputs, ABIStruct } from '.';
-import { isACoreType } from './dataTypes';
-import { extractSubTypesFromType, hasArrayOfSubType } from './helper';
+import { ABIEnum, ABIFunctionInputs, ABIStruct } from '.';
+import { isACoreEnum, isACoreType } from './dataTypes';
+import {
+  extractSubTypesFromType,
+  extractSubTypesFromTypeOuter,
+  hasArrayOfSubType,
+  hasSubTypes,
+  hasTuple,
+} from './helper';
 
 // name: {type: core | array | struct, validation: yupSchema, content: [] | {} | ''}
 
@@ -12,12 +18,20 @@ function functionFindFromStructs(structs: ABIStruct[], name: string) {
   return -1;
 }
 
-type UIType = {
+function functionFindFromEnums(enums: ABIEnum[], name: string) {
+  if (name && typeof name === 'string') {
+    return enums.findIndex((e) => e?.name === name);
+  }
+  return -1;
+}
+
+export type UIType = {
   abi_type: string;
   content: string | any[] | {};
-  type: 'core' | 'array' | 'struct';
+  type: 'core' | 'array' | 'struct' | 'enum';
   validationSchema?: null | Yup.AnySchema;
 };
+
 const expandStructsAndReduce = (
   struct: ABIStruct,
   structs: ABIStruct[]
@@ -129,9 +143,135 @@ const expandStructsAndReduce = (
   return {};
 };
 
+const expandEnumsAndReduce = (en: ABIEnum, enums: ABIEnum[]): UIType | {} => {
+  if (en && typeof en === 'object') {
+    if (en.variants && Array.isArray(en.variants) && en.variants.length > 0) {
+      return en.variants.reduce((pVariant, cVariant) => {
+        // Base case
+        if (isACoreType(cVariant.type)) {
+          // In case we found that enum variant has a core type
+          return {
+            ...pVariant,
+            [cVariant.name]: {
+              type: 'core',
+              abi_type: cVariant.type,
+              validationSchema: Yup.string()
+                .required()
+                // @ts-expect-error because validate_core_type is not a function of Yup
+                .validate_core_type(cVariant.type),
+              content: '',
+            },
+          };
+        }
+
+        if (hasSubTypes(cVariant.type)) {
+          const subArrType = extractSubTypesFromTypeOuter(cVariant.type);
+          console.log('Has subtype ?', subArrType?.types);
+        }
+        // if (isACoreType(cVariant.type)) {
+        //   return {
+        //     ...pVariant,
+        //     [cVariant.name]: {
+        //       type: 'core',
+        //       abi_type: cVariant.type,
+        //       validationSchema: Yup.string()
+        //         .required()
+        //         // @ts-expect-error because validate_core_type is not a function of Yup
+        //         .validate_core_type(cVariant.type),
+        //       content: '',
+        //     },
+        //   };
+        // }
+        // if (hasArrayOfSubType(cVariant.type)) {
+        //   const isSubTypes = extractSubTypesFromType(cVariant.type);
+        //   if (isSubTypes && isSubTypes?.contains && isSubTypes?.types) {
+        //     const subArrType = isSubTypes.types[0];
+        //     // Is Array is of core type return,
+        //     if (isACoreType(subArrType)) {
+        //       return {
+        //         ...pVariant,
+        //         [cVariant.name]: {
+        //           type: 'array',
+        //           abi_type: cVariant.type,
+        //           validationSchema: Yup.array(
+        //             Yup.string()
+        //               .required()
+        //               // @ts-expect-error because validate_core_type is not a function of Yup
+        //               .validate_core_type(subArrType)
+        //           ),
+        //           content: [''],
+        //         },
+        //       };
+        //     }
+        //     // Else call recursively
+        //     const enumArrIdx = functionFindFromEnums(enums, subArrType);
+        //     if (enumArrIdx > -1) {
+        //       const reducedStruct = expandEnumsAndReduce(
+        //         enums[enumArrIdx],
+        //         enums
+        //       );
+
+        //       return {
+        //         ...pVariant,
+        //         [cVariant.name]: {
+        //           type: 'array',
+        //           validationSchema: null,
+        //           abi_type: cVariant.type,
+        //           content: [
+        //             {
+        //               ...reducedStruct,
+        //             },
+        //           ],
+        //         },
+        //       };
+        //     }
+        //     return {
+        //       ...pVariant,
+        //       [cVariant.name]: {
+        //         type: 'raw',
+        //         abi_type: cVariant.type,
+        //         validationSchema: Yup.string(),
+        //         content: '',
+        //       },
+        //     };
+        //   }
+        // }
+
+        // const enumIdx = functionFindFromEnums(enums, cVariant.type);
+
+        // if (enumIdx > -1) {
+        //   const reducedStruct = expandEnumsAndReduce(
+        //     enums[enumIdx],
+        //     enums
+        //   );
+
+        //   return {
+        //     ...pVariant,
+        //     [cVariant.name]: {
+        //       type: 'enum',
+        //       abi_type: cVariant.type,
+        //       validationSchema: null,
+        //       content: {
+        //         ...reducedStruct,
+        //       },
+        //     },
+        //   };
+        // }
+
+        return {
+          ...pVariant,
+        };
+      }, {});
+    }
+    return {};
+  }
+  return {};
+};
+
 export const reduceFunctionInputs = (
   inputs: ABIFunctionInputs[],
-  structs: ABIStruct[]
+  structs: ABIStruct[],
+  enums: ABIEnum[]
 ): UIType | {} =>
   inputs?.reduce((p, c) => {
     if (isACoreType(c.type)) {
@@ -219,6 +359,24 @@ export const reduceFunctionInputs = (
       };
     }
 
+    const enumIdx = functionFindFromEnums(enums, c.type);
+
+    if (enumIdx > -1) {
+      console.log('Found enum', enumIdx, enums[enumIdx]);
+      const reducedEnum = expandEnumsAndReduce(enums[enumIdx], enums);
+      console.log({ fnname: c.name, reducedEnum });
+      return {
+        ...p,
+        [c.name]: {
+          type: 'enum',
+          abi_type: c.type,
+          content: {
+            ...reducedEnum,
+          },
+        },
+      };
+    }
+
     return {
       ...p,
     };
@@ -238,6 +396,13 @@ export function extractInitialValues(values: UIType | {}): {} {
       }
 
       if (currentObj?.type === 'struct') {
+        return {
+          ...p,
+          [c]: extractInitialValues(currentObj?.content),
+        };
+      }
+
+      if (currentObj?.type === 'enum') {
         return {
           ...p,
           [c]: extractInitialValues(currentObj?.content),
@@ -293,6 +458,13 @@ export function extractValidationSchema(values: UIType | {}): {} {
         };
       }
 
+      if (currentObj?.type === 'enum') {
+        return {
+          ...p,
+          [c]: Yup.object(extractValidationSchema(currentObj?.content)),
+        };
+      }
+
       if (currentObj?.type === 'array') {
         // We can safely take 0th object from array since
         // we have assigned in our default parsing for presenting arrays.
@@ -328,6 +500,13 @@ export function extractAbiTypes(values: UIType | {}): {} {
       }
 
       if (currentObj?.type === 'struct') {
+        return {
+          ...p,
+          [c]: extractAbiTypes(currentObj?.content),
+        };
+      }
+
+      if (currentObj?.type === 'enum') {
         return {
           ...p,
           [c]: extractAbiTypes(currentObj?.content),

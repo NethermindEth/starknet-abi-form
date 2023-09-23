@@ -92,6 +92,56 @@ export function hasArrayOfSubType(type: string): boolean {
   return false;
 }
 
+export function hasTuple(type: string): boolean {
+  const regex = /\([^)]*\)/g;
+  if (type && typeof type === 'string') {
+    return regex.test(type);
+  }
+  return false;
+}
+
+export function extractOutermostAngleBrackets(input: string) {
+  const matches = [];
+  let depth = 0;
+  let start = -1;
+
+  for (let i = 0; i < input.length; i++) {
+    if (input[i] === '<') {
+      if (depth === 0) {
+        start = i;
+      }
+      depth++;
+    } else if (input[i] === '>') {
+      depth--;
+      if (depth === 0 && start !== -1) {
+        matches.push(input.substring(start, i + 1));
+        start = -1;
+      }
+    }
+  }
+
+  return matches;
+}
+
+export function extractSubTypesFromTypeOuter(
+  type: string
+): ReturnExtractedSubTypes {
+  if (hasSubTypes(type)) {
+    const matches = extractOutermostAngleBrackets(type) || [];
+    console.log(matches);
+    const finalMatch = matches.map((lType) =>
+      lType.substring(1, lType.length - 1)
+    );
+    return {
+      contains: true,
+      types: finalMatch,
+    };
+  }
+  return {
+    contains: false,
+  };
+}
+
 export function extractSubTypesFromType(type: string): ReturnExtractedSubTypes {
   const regex = /<[^<>]*>/g;
   if (type && typeof type === 'string') {

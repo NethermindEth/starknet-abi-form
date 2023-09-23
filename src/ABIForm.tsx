@@ -4,6 +4,7 @@ import React, { useMemo, useState } from 'react';
 
 import { ABI, abiSchema } from './types/index';
 import {
+  extractEnumsFromABI,
   extractFunctionFromRawAbi,
   extractStructFromABI,
   segregateViewAndExternalFunctions,
@@ -67,13 +68,13 @@ export const ABIForm: React.FC<ABIFormProps> = ({
     }
   }, [abi]);
 
-  // const enums = useMemo(() => {
-  //   try {
-  //     return extractEnumsFromABI(abi);
-  //   } catch (e) {
-  //     return [];
-  //   }
-  // }, [abi]);
+  const enums = useMemo(() => {
+    try {
+      return extractEnumsFromABI(abi);
+    } catch (e) {
+      return [];
+    }
+  }, [abi]);
 
   const [activeTab, setActiveTab] = useState<'read' | 'write'>('read');
 
@@ -112,7 +113,7 @@ export const ABIForm: React.FC<ABIFormProps> = ({
               structs={structs}
               callbackFn={callBackFn}
               response={responses && responses[viewFn?.name]}
-              // enums={enums}
+              enums={enums}
             />
           ))}
         </Content>
@@ -124,7 +125,7 @@ export const ABIForm: React.FC<ABIFormProps> = ({
               structs={structs}
               callbackFn={callBackFn}
               response={responses && responses[externalFn?.name]}
-              // enums={enums}
+              enums={enums}
             />
           ))}
         </Content>

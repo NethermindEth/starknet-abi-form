@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import loadashFp from 'lodash';
 import { useAtom } from 'jotai';
-import { ABIFunction, ABIStruct, yupAbiFunctionSchema } from './types';
+import { ABIEnum, ABIFunction, ABIStruct, yupAbiFunctionSchema } from './types';
 
 import './FunctionForm.css';
 import {
+  UIType,
   extractAbiTypes,
   extractInitialValues,
   extractValidationSchema,
@@ -31,6 +32,7 @@ import { CallbackReturnType } from './ABIForm';
 import { formsAtom } from './atoms';
 import { finalTransformedValue } from './types/dataTypes';
 import { Content, Portal, Root, Trigger } from './UIComponents/Tooltip/Tooltip';
+import * as Select from './UIComponents/Select/Select';
 
 const typeToTagColor = (name: string): TagColors => {
   try {
@@ -70,6 +72,7 @@ type IParseInputFieldsFromObject = {
   handleArrayPush: (path: string[], value: string | {}) => void;
   handleChange: (e: React.ChangeEvent<any>) => any;
   initialValues: Record<string, string | {} | Array<{}>>;
+  intermediateInitialValues: UIType | {};
   parentKeys?: string[];
   values: Record<string, string | {} | Array<{}>>;
 };
@@ -78,6 +81,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
   errors,
   abiTypes,
   initialValues,
+  intermediateInitialValues,
   parentKeys,
   handleChange,
   handleArrayPush,
@@ -173,6 +177,73 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
         !Array.isArray(currentValueObject)
       ) {
         const lParentKeys = parentKeys ? [...parentKeys, key] : [key];
+
+        let parentObj = null;
+
+        if (loadashFp.has(intermediateInitialValues, lParentKeys)) {
+          parentObj = loadashFp.get(intermediateInitialValues, lParentKeys);
+        }
+
+        if (parentObj && parentObj?.type === 'enum') {
+          const [currentEnumVal, setCurrentEnumVal] = useState('');
+          return (
+            <div
+              className="w-full flex flex-col shadow-md shadow-green-500 rounded p-2 my-2 bg-green-50 function-struct"
+              key={lParentKeys.join('|')}
+            >
+              <p className="text-xl font-bold function-struct-header">
+                enum: {key}
+              </p>
+              <Select.Root
+                value={currentEnumVal}
+                onValueChange={(e) => {
+                  setCurrentEnumVal(e);
+                }}
+              >
+                <Select.Trigger className="inline-flex items-center justify-center rounded px-[15px] text-[13px] leading-none h-[35px] gap-[5px] bg-white text-violet11 shadow-[0_2px_10px] shadow-black/10 hover:bg-mauve3 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-violet9 outline-none">
+                  {currentEnumVal || 'Select an Enum Value'}
+                </Select.Trigger>
+                <div id={`enum-parent${lParentKeys.join('|')}`}></div>
+                <Select.Portal
+                  container={document.getElementById(
+                    `enum-parent${lParentKeys.join('|')}`
+                  )}
+                >
+                  <Select.Content asChild>
+                    <Select.Viewport>
+                      {Object.keys(currentValueObject).map((lEnumKey) => {
+                        return (
+                          <Select.SelectItem value={lEnumKey}>
+                            {lEnumKey}
+                          </Select.SelectItem>
+                        );
+                      })}
+                    </Select.Viewport>
+                  </Select.Content>
+                </Select.Portal>
+              </Select.Root>
+
+              {currentEnumVal ? (
+                <ParseInputFieldsFromObject
+                  values={{
+                    [currentEnumVal]: currentValueObject[currentEnumVal],
+                  }}
+                  errors={errors}
+                  initialValues={initialValues}
+                  intermediateInitialValues={intermediateInitialValues}
+                  abiTypes={abiTypes}
+                  parentKeys={lParentKeys}
+                  handleChange={handleChange}
+                  handleArrayPush={handleArrayPush}
+                  handleArrayPop={handleArrayPop}
+                />
+              ) : (
+                <p>Select a enum</p>
+              )}
+            </div>
+          );
+        }
+
         return (
           <div
             className="w-full flex flex-col shadow-md shadow-green-500 rounded p-2 my-2 bg-green-50 function-struct"
@@ -185,6 +256,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
               values={{ ...currentValueObject }}
               errors={errors}
               initialValues={initialValues}
+              intermediateInitialValues={intermediateInitialValues}
               abiTypes={abiTypes}
               parentKeys={lParentKeys}
               handleChange={handleChange}
@@ -230,7 +302,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
             key={`accordion-root|${pathKeys.join('|')}`}
             className="w-full shadow-sm shadow-purple-500 p-2 rounded bg-purple-50 function-array-root"
             value={accordianTabsState}
-            onValueChange={(value) => {
+            onValueChange={(value: any) => {
               const diff = loadashFp.difference(accordianTabsState, value);
               if (diff.length > 0) {
                 const filteredAccordianTabsState = accordianTabsState.filter(
@@ -377,6 +449,7 @@ const ParseInputFieldsFromObject: React.FC<IParseInputFieldsFromObject> = ({
                       values={{ ...obj }}
                       errors={errors}
                       initialValues={initialValues}
+                      intermediateInitialValues={intermediateInitialValues}
                       abiTypes={abiTypes}
                       parentKeys={lParentKeys}
                       handleChange={handleChange}
@@ -401,7 +474,7 @@ type IFunctionForm = {
   functionAbi: ABIFunction;
   response?: React.ReactNode;
   structs: ABIStruct[];
-  // enums: ABIEnum[];
+  enums: ABIEnum[];
 };
 
 const FunctionForm: React.FC<IFunctionForm> = ({
@@ -409,7 +482,7 @@ const FunctionForm: React.FC<IFunctionForm> = ({
   structs,
   callbackFn,
   response,
-  // enums,
+  enums,
 }) => {
   // Check if functionAbi is correct with yup validation schema
   try {
@@ -419,8 +492,12 @@ const FunctionForm: React.FC<IFunctionForm> = ({
     return <p className="invalid-abi">Not a valid function ABI</p>;
   }
 
-  const initialValuesMap = reduceFunctionInputs(functionAbi?.inputs, structs);
-  // console.log({initialValuesMap, functionAbi, structs});
+  const initialValuesMap = reduceFunctionInputs(
+    functionAbi?.inputs,
+    structs,
+    enums
+  );
+  console.log({ initialValuesMap });
   // Freezing object, as these are reference maps used to make initial forms
   // also helpers like type info + validation schema
   const initialValues = Object.freeze(extractInitialValues(initialValuesMap));
@@ -537,6 +614,7 @@ const FunctionForm: React.FC<IFunctionForm> = ({
           values={values}
           errors={errors}
           initialValues={initialValues}
+          intermediateInitialValues={initialValuesMap}
           abiTypes={abiTypesInfo}
           handleChange={handleChange}
           handleArrayPush={handleArrayPush}
