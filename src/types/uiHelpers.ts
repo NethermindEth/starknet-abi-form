@@ -4,9 +4,11 @@ import { isACoreEnum, isACoreType } from './dataTypes';
 import {
   extractSubTypesFromType,
   extractSubTypesFromTypeOuter,
+  extractTupleContent,
   hasArrayOfSubType,
   hasSubTypes,
   hasTuple,
+  transformIndividualTypesFromTuples,
 } from './helper';
 
 // name: {type: core | array | struct, validation: yupSchema, content: [] | {} | ''}
@@ -160,6 +162,49 @@ const expandEnumsAndReduce = (en: ABIEnum, enums: ABIEnum[]): UIType | {} => {
                 // @ts-expect-error because validate_core_type is not a function of Yup
                 .validate_core_type(cVariant.type),
               content: '',
+            },
+          };
+        }
+
+        if (cVariant.type === '()') {
+          return {
+            ...pVariant,
+            [cVariant.name]: {
+              type: 'enum_option',
+              abi_type: cVariant.type,
+              validationSchema: null,
+              content: null,
+            },
+          };
+        }
+
+        if (hasTuple(cVariant.type)) {
+          console.log('Has tuples', cVariant.type);
+          const tuples = extractTupleContent(cVariant.type);
+          // explicitly taking first element from tuple
+          const finalTuples = tuples.map((tuple) =>
+            transformIndividualTypesFromTuples(tuple)
+          )[0];
+
+          const finalReducedValues = finalTuples.reduce((pVal, cVal, index) => {
+            return {
+              ...pVal,
+              [index]: {
+                type: 'core',
+                abi_type: cVal,
+                content: '',
+                validationSchema: null,
+              },
+            };
+          }, {});
+
+          return {
+            ...pVariant,
+            [cVariant.name]: {
+              type: 'enum',
+              abi_type: cVariant.type,
+              validationSchema: null,
+              content: finalReducedValues,
             },
           };
         }

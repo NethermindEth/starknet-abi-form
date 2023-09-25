@@ -100,6 +100,29 @@ export function hasTuple(type: string): boolean {
   return false;
 }
 
+export function extractTupleContent(type: string): string[] {
+  const regex = /\(([^)]+)\)/g;
+
+  if (type && typeof type === 'string') {
+    const matches = type.match(regex);
+    const finalMatches =
+      matches?.map((matchedVal) => {
+        return matchedVal.slice(1, matchedVal.length - 1);
+      }) || [];
+    return finalMatches;
+  }
+  return [];
+}
+
+export function transformIndividualTypesFromTuples(value: string): string[] {
+  if (value && typeof value === 'string') {
+    const items = value.split(',').map((v) => v.trim());
+    console.log(items);
+    return items;
+  }
+  return [];
+}
+
 export function extractOutermostAngleBrackets(input: string) {
   const matches = [];
   let depth = 0;
