@@ -69,7 +69,7 @@
     "./{src,tests}/**/*.{ts,js,jsx,tsx}": [
       "eslint --fix --ignore-path .gitignore"
     ],
-    "*": "prettier --write"
+    "./{src,tests}/**/*": "prettier --write"
   },
   "config": {
     "commitizen": {
