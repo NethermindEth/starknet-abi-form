@@ -54,7 +54,7 @@ const yupAbiEventSchema = Yup.object().shape({
 });
 
 const yupAbiFunctionSchema = Yup.object().shape({
-  type: Yup.string().strict(true).required().oneOf(['function']),
+  type: Yup.string().strict(true).required().oneOf(['function', 'constructor']),
   name: Yup.string().strict(true).required(),
   inputs: Yup.array(yupAbiInputSchema).required(),
   outputs: Yup.array(yupAbiOutputSchema).required(),

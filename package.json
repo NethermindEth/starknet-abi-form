@@ -67,7 +67,7 @@
   "style": "dist/index.css",
   "lint-staged": {
     "./{src,tests}/**/*.{ts,js,jsx,tsx}": [
-      "eslint --ignore-path .gitignore --fix"
+      "eslint --fix --ignore-path .gitignore"
     ],
     "*": "prettier --write"
   },
