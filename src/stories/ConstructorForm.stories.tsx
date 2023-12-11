@@ -2,7 +2,6 @@ import React from 'react';
 import { Meta, StoryFn } from '@storybook/react';
 
 import { ConstructorForm } from '..';
-import useResponseUI from '../hooks/useResponse';
 
 export default {
   title: 'ConstructorForm',
@@ -10,13 +9,9 @@ export default {
   argTypes: {},
 } as Meta<typeof ConstructorForm>;
 
-const Template: StoryFn<typeof ConstructorForm> = (args) => {
-  const { responses } = useResponseUI({
-    complex_input: <div>Test Response</div>,
-  });
-
-  return <ConstructorForm {...args} responses={responses} />;
-};
+const Template: StoryFn<typeof ConstructorForm> = (args) => (
+  <ConstructorForm {...args} />
+);
 
 export const Primary = Template.bind({});
 
