@@ -416,7 +416,11 @@ const FunctionForm: React.FC<IFunctionForm> = ({
     yupAbiFunctionSchema.validateSync(functionAbi);
   } catch (e) {
     console.error(e);
-    return <p className="invalid-abi">Not a valid function ABI</p>;
+    return (
+      <p className="invalid-abi">
+        Not a valid function ABI {JSON.stringify(functionAbi)}
+      </p>
+    );
   }
 
   const initialValuesMap = reduceFunctionInputs(functionAbi?.inputs, structs);

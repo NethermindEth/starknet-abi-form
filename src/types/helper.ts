@@ -28,6 +28,44 @@ type ReturnFunctions = {
   viewFunctions: ABIFunction[];
 };
 
+export function extractConstructorFromRawAbi(abi: ABI): ReturnConstructor {
+  const constructor = abi?.find(
+    (item: any) => item.type && item.type === 'constructor'
+  );
+  if (constructor) {
+    return constructor as ReturnConstructor;
+  }
+  return {
+    type: 'constructor',
+    name: 'constructor',
+    inputs: [],
+  };
+}
+
+interface ReturnConstructor {
+  inputs: { name: string; type: string }[];
+  name: string;
+  type: string;
+}
+
+export const convertConstructorToFunction = (
+  constructor: ReturnConstructor
+): ABIFunction => ({
+  type: constructor.type,
+  name: constructor.name,
+  inputs: constructor.inputs,
+  outputs: [],
+  state_mutability: 'external',
+});
+
+export const EMPTY_CONSTRUCTOR_FUNCTION: ABIFunction = {
+  type: 'constructor',
+  name: 'constructor',
+  inputs: [],
+  outputs: [],
+  state_mutability: 'external',
+};
+
 export function segregateViewAndExternalFunctions(
   functions: ABIFunction[]
 ): ReturnFunctions {
