@@ -43,6 +43,7 @@ export const ConstructorForm: React.FC<ConstructorFormProps> = ({
         callbackFn={callBackFn}
         functionAbi={constructor}
         structs={[]}
+        buttonLabel="Deploy"
       />
     </Provider>
   );
